@@ -7,6 +7,7 @@
   <title>RBF Kernel &mdash; RKM 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -19,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Polynomial Kernel" href="rkm.kernel.polynomial.html" />
-    <link rel="prev" title="Linear Kernel" href="rkm.kernel.linear.html" /> 
+    <link rel="next" title="Laplacian Kernel" href="laplacian.html" />
+    <link rel="prev" title="Linear Kernel" href="linear.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,8 +40,29 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.html">Kernel Module</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#kernel-factory">Kernel Factory</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#generic-kernels">Generic Kernels</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linear.html">Linear Kernel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RBF Kernel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#class">Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nystrom.html">Nystrom Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -57,10 +79,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="rkm.kernel.html">Kernel Module</a> &raquo;</li>
+          <li><a href="index.html">Kernel Module</a> &raquo;</li>
       <li>RBF Kernel</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/rkm.kernel.rbf.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/kernel/rbf.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -70,17 +92,19 @@
              
   <section id="rbf-kernel">
 <h1>RBF Kernel<a class="headerlink" href="#rbf-kernel" title="Permalink to this headline"></a></h1>
+<section id="class">
+<h2>Class<a class="headerlink" href="#class" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="rkm.kernel.rbf">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rkm.kernel.</span></span><span class="sig-name descname"><span class="pre">rbf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.rbf" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="rkm.kernel.implicit.html#rkm.kernel.implicit" title="rkm.kernel.implicit.implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.implicit.implicit</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="exponential.html#rkm.kernel.exponential" title="rkm.kernel.exponential.exponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.exponential.exponential</span></code></a></p>
 <p>RBF kernel (radial basis function).</p>
 <div class="math notranslate nohighlight">
-\[k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\texttt{sigma}^2} \right).\]</div>
+\[k(x,y) = \exp\left( -\frac{\lVert x-y \rVert_2^2}{2\sigma^2} \right).\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sigma</strong> (<em>double</em><em>, </em><em>optional</em>) – Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the RBF kernel. If <cite>None</cite>, the value is filled by a heuristic on
+<li><p><strong>sigma</strong> (<em>double</em><em>, </em><em>optional</em>) – Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the kernel. If <cite>None</cite>, the value is filled by a heuristic on
 the sample dataset: 7/10th of the median of the pairwise distances. Computing the heuristic on the full sample
 dataset can be expensive and <cite>idx_sample</cite> or <cite>prop_sample</cite> could be specified to only compute it on a subset
 only., defaults to <cite>None</cite>.</p></li>
@@ -226,7 +250,7 @@ construction is used., defaults to None</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.normalize">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.rbf.normalize" title="Permalink to this definition"></a></dt>
-<dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
+<dd><p>Indicates if the kernel is normalized. This value cannot be changed for exponential kernels.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -257,7 +281,7 @@ the case of stochastic training.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.sigma">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sigma</span></span><a class="headerlink" href="#rkm.kernel.rbf.sigma" title="Permalink to this definition"></a></dt>
-<dd><p>Bandwidth of the RBF kernel.</p>
+<dd><p>Bandwidth <span class="math notranslate nohighlight">\(\sigma\)</span> of the kernel.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -275,7 +299,7 @@ case of stochastic training.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>idx_sample</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
-<li><p><strong>prop_sample</strong> (<em>int</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+<li><p><strong>prop_sample</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
 </ul>
@@ -318,13 +342,62 @@ the gradients of the updated values to zero if relevant.</p>
 </dd></dl>
 
 </section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<section id="sine">
+<h3>Sine<a class="headerlink" href="#sine" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rkm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">rkm</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">rbf</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sigma = &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">sigma</span><span class="p">))</span>
+
+<span class="n">k</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sigma = &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">sigma</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../kernel/rbf-1.py">Source code</a>)</p>
+<figure class="align-default" id="id1">
+<img alt="../_images/rbf-1_00.png" class="plot-directive" src="../_images/rbf-1_00.png" />
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/rbf-1_00.png">png</a>, <a class="reference external" href="../kernel/rbf-1_00.hires.png">hires.png</a>, <a class="reference external" href="../kernel/rbf-1_00.pdf">pdf</a>)</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id2">
+<img alt="../_images/rbf-1_01.png" class="plot-directive" src="../_images/rbf-1_01.png" />
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/rbf-1_01.png">png</a>, <a class="reference external" href="../kernel/rbf-1_01.hires.png">hires.png</a>, <a class="reference external" href="../kernel/rbf-1_01.pdf">pdf</a>)</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id3">
+<img alt="../_images/rbf-1_02.png" class="plot-directive" src="../_images/rbf-1_02.png" />
+<figcaption>
+<p><span class="caption-text">(<a class="reference external" href="../kernel/rbf-1_02.png">png</a>, <a class="reference external" href="../kernel/rbf-1_02.hires.png">hires.png</a>, <a class="reference external" href="../kernel/rbf-1_02.pdf">pdf</a>)</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rkm.kernel.linear.html" class="btn btn-neutral float-left" title="Linear Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rkm.kernel.polynomial.html" class="btn btn-neutral float-right" title="Polynomial Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="linear.html" class="btn btn-neutral float-left" title="Linear Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="laplacian.html" class="btn btn-neutral float-right" title="Laplacian Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

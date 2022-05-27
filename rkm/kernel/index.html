@@ -7,6 +7,7 @@
   <title>Kernel Module &mdash; RKM 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -18,7 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Linear Kernel" href="rkm.kernel.linear.html" />
+    <link rel="next" title="Linear Kernel" href="linear.html" />
     <link rel="prev" title="Welcome to the RKM pakage" href="../index.html" /> 
 </head>
 
@@ -42,33 +43,35 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Kernel Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#kernel-factory">Kernel Factory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#generic-kernels">Generic Kernels</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.linear.html">Linear Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.rbf.html">RBF Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.polynomial.html">Polynomial Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.cosine.html">Cosine Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.sigmoid.html">Sigmoid Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.nystrom.html">Nystrom Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="linear.html">Linear Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nystrom.html">Nystrom Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#network-based-kernels">Network-based kernels</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.explicit_nn.html">Explicit Network-based Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.implicit_nn.html">Implicit Network-based Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="explicit_nn.html">Explicit Network-based Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="implicit_nn.html">Implicit Network-based Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#time-kernels">Time Kernels</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.indicator.html">Indicator Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.hat.html">Hat Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="indicator.html">Indicator Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#vision-kernels">Vision Kernels</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.additive_chi2.html">Additive Chi Squared Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.skewed_chi2.html">Skewed Chi Squared Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="additive_chi2.html">Additive Chi Squared Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="skewed_chi2.html">Skewed Chi Squared Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#abstract-kernels">Abstract Kernels</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.explicit.html">Explicit Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.implicit.html">Implicit Kernel</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rkm.kernel.base.html">Base Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exponential.html">Exponential Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="explicit.html">Explicit Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="implicit.html">Implicit Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html">Base Kernel</a></li>
 </ul>
 </li>
 </ul>
@@ -91,7 +94,7 @@
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>Kernel Module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/rkm.kernel.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/kernel/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -115,9 +118,9 @@ out-of-sample computations.</p>
 <p>At last, a Nystrom kernel is also implemented, which created an explicit feature map based on any kernel (possibly
 implicit), using eigendocomposition. Among other things, this can serve as a solution for centering fully out-of-sample
 kernel matrices of implicitly defined kernels.</p>
-<p>The general structure of the module is based around an abstract kernel class <cite>rkm.kernel.base</cite>, of which
-<cite>rkm.kernle.implicit</cite> and <cite>rkm.kernel.explicit</cite> inherit. All other kernels inherit of one of these two at the exception
-of <cite>rkm.kernel.polynomial</cite> which directly inherits <cite>rkm.kernel.base</cite> as it has a primal formulation and a dual
+<p>The general structure of the module is based around an abstract kernel class <cite>base</cite>, of which
+<cite>rkm.kernle.implicit</cite> and <cite>explicit</cite> inherit. All other kernels inherit of one of these two at the exception
+of <cite>polynomial</cite> which directly inherits <cite>base</cite> as it has a primal formulation and a dual
 formulation which can be computed otherwise than with an inner product of the explicit feature map.</p>
 <section id="kernel-factory">
 <h2>Kernel Factory<a class="headerlink" href="#kernel-factory" title="Permalink to this headline"></a></h2>
@@ -148,12 +151,13 @@ values, please refer to the default values of the requested kernel.</p></li>
 <h2>Generic Kernels<a class="headerlink" href="#generic-kernels" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.linear.html">Linear Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.rbf.html">RBF Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.polynomial.html">Polynomial Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.cosine.html">Cosine Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.sigmoid.html">Sigmoid Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.nystrom.html">Nystrom Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="linear.html">Linear Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nystrom.html">Nystrom Kernel</a></li>
 </ul>
 </div>
 </section>
@@ -161,8 +165,8 @@ values, please refer to the default values of the requested kernel.</p></li>
 <h2>Network-based kernels<a class="headerlink" href="#network-based-kernels" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.explicit_nn.html">Explicit Network-based Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.implicit_nn.html">Implicit Network-based Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="explicit_nn.html">Explicit Network-based Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implicit_nn.html">Implicit Network-based Kernel</a></li>
 </ul>
 </div>
 </section>
@@ -170,8 +174,8 @@ values, please refer to the default values of the requested kernel.</p></li>
 <h2>Time Kernels<a class="headerlink" href="#time-kernels" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.indicator.html">Indicator Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.hat.html">Hat Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indicator.html">Indicator Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
 </ul>
 </div>
 </section>
@@ -179,8 +183,8 @@ values, please refer to the default values of the requested kernel.</p></li>
 <h2>Vision Kernels<a class="headerlink" href="#vision-kernels" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.additive_chi2.html">Additive Chi Squared Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.skewed_chi2.html">Skewed Chi Squared Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="additive_chi2.html">Additive Chi Squared Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skewed_chi2.html">Skewed Chi Squared Kernel</a></li>
 </ul>
 </div>
 </section>
@@ -188,9 +192,10 @@ values, please refer to the default values of the requested kernel.</p></li>
 <h2>Abstract Kernels<a class="headerlink" href="#abstract-kernels" title="Permalink to this headline"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.explicit.html">Explicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.implicit.html">Implicit Kernel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.base.html">Base Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exponential.html">Exponential Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="explicit.html">Explicit Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implicit.html">Implicit Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base.html">Base Kernel</a></li>
 </ul>
 </div>
 </section>
@@ -201,7 +206,7 @@ values, please refer to the default values of the requested kernel.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to the RKM pakage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rkm.kernel.linear.html" class="btn btn-neutral float-right" title="Linear Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="linear.html" class="btn btn-neutral float-right" title="Linear Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -4,9 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polynomial Kernel &mdash; RKM 0.1 documentation</title>
+  <title>Nystrom Kernel &mdash; RKM 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -19,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Cosine Kernel" href="rkm.kernel.cosine.html" />
-    <link rel="prev" title="RBF Kernel" href="rkm.kernel.rbf.html" /> 
+    <link rel="next" title="Explicit Network-based Kernel" href="explicit_nn.html" />
+    <link rel="prev" title="Sigmoid Kernel" href="sigmoid.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,8 +40,25 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.html">Kernel Module</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#kernel-factory">Kernel Factory</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#generic-kernels">Generic Kernels</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linear.html">Linear Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="laplacian.html">Laplacian Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="polynomial.html">Polynomial Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cosine.html">Cosine Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sigmoid.html">Sigmoid Kernel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Nystrom Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -57,10 +75,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="rkm.kernel.html">Kernel Module</a> &raquo;</li>
-      <li>Polynomial Kernel</li>
+          <li><a href="index.html">Kernel Module</a> &raquo;</li>
+      <li>Nystrom Kernel</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/rkm.kernel.polynomial.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/kernel/nystrom.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -68,25 +86,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="polynomial-kernel">
-<h1>Polynomial Kernel<a class="headerlink" href="#polynomial-kernel" title="Permalink to this headline"></a></h1>
+  <section id="nystrom-kernel">
+<h1>Nystrom Kernel<a class="headerlink" href="#nystrom-kernel" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rkm.kernel.</span></span><span class="sig-name descname"><span class="pre">polynomial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="rkm.kernel.base.html#rkm.kernel.base" title="rkm.kernel.base.base"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.base.base</span></code></a></p>
-<p>Polynomial kernel. Projection onto a hypershpere.</p>
-<div class="math notranslate nohighlight">
-\[k(x,y) = \left(x^\top y + 1\right)^\texttt{degree}.\]</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>An explicit feature map also corresponds to this kernel, but is not implemented.</p>
-</div>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rkm.kernel.</span></span><span class="sig-name descname"><span class="pre">nystrom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="explicit.html#rkm.kernel.explicit" title="rkm.kernel.explicit.explicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.explicit.explicit</span></code></a></p>
+<p>Nyström kernel. Constructs an explicit feature map based on the eigendecomposition of any kernel matrix based on
+some sample.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>degree</strong> (<em>double</em><em>, </em><em>optional</em>) – Degree of the polynomial kernel., defaults to 1</p></li>
-<li><p><strong>degree_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradient of the degree is to be computed. If so, a graph is computed
-and the degree can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension of the explicit feature map to be constructed. This value cannot exceed the number of sample
+points. During eigendecomposition, very small eigenvalues are also going to pruned to avoid numerical
+instability. If <cite>None</cite>, the value will be assigned to <cite>num_sample</cite>., defaults to <cite>None</cite></p></li>
+<li><p><strong>base_type</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of kernel on which the explicit feature map is going to be constructed., defaults to
+<cite>“rbf”</cite></p></li>
+<li><p><strong>base_center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Specifies if the base kernel has to be centered. This is redundant and can be directly handled
+by the Nystrom kernel itself. It is only added for completeness., defaults to <cite>False</cite></p></li>
+<li><p><strong>base_normalize</strong> (<em>bool</em><em>, </em><em>optional</em>) – Specifies if the base kernel has to be normalized., This is redundant and can be directly
+handled by the Nystrom kernel itself. It is only added for completeness., defaults to <cite>False</cite></p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
+polynomial kernel etc.). For the default values, please refer to the requested class in question.</p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
@@ -109,17 +130,17 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dd>
 </dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.C">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><a class="headerlink" href="#rkm.kernel.polynomial.C" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.C">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><a class="headerlink" href="#rkm.kernel.nystrom.C" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the covariance matrix on the sample datapoints.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.\]</div>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.polynomial.K" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.polynomial.k" title="rkm.kernel.polynomial.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.K">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.nystrom.K" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.nystrom.k" title="rkm.kernel.nystrom.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
 <div class="math notranslate nohighlight">
@@ -127,32 +148,20 @@ called.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.center">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.polynomial.center" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.center">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.nystrom.center" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.degree">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degree</span></span><a class="headerlink" href="#rkm.kernel.polynomial.degree" title="Permalink to this definition"></a></dt>
-<dd><p>Degree of the polynomial.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.degree_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">degree_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.polynomial.degree_trainable" title="Permalink to this definition"></a></dt>
-<dd><p>Boolean indicating if the degree is trainable.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.polynomial.dim_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.dim_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.nystrom.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.forward" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Passes datapoints through the kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -171,22 +180,22 @@ called.</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.hparams">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#rkm.kernel.polynomial.hparams" title="Permalink to this definition"></a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.hparams">
+<span class="sig-name descname"><span class="pre">hparams</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.hparams" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the hyperparameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#rkm.kernel.polynomial.idx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#rkm.kernel.nystrom.idx" title="Permalink to this definition"></a></dt>
 <dd><p>Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
 in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.init_sample">
-<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.init_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.init_sample">
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.init_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -208,8 +217,8 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.k" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.k">
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -245,33 +254,33 @@ construction is used., defaults to None</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.normalize">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.polynomial.normalize" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.normalize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.nystrom.normalize" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.polynomial.num_idx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.num_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.nystrom.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.polynomial.num_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.num_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.nystrom.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.params">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#rkm.kernel.polynomial.params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#rkm.kernel.nystrom.params" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.phi" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.phi">
+<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.phi" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the specified points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -291,30 +300,30 @@ construction is used., defaults to None</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.phi_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><a class="headerlink" href="#rkm.kernel.polynomial.phi_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.phi_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><a class="headerlink" href="#rkm.kernel.nystrom.phi_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
-<a class="reference internal" href="#rkm.kernel.polynomial.phi" title="rkm.kernel.polynomial.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
+<a class="reference internal" href="#rkm.kernel.nystrom.phi" title="rkm.kernel.nystrom.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.polynomial.sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.nystrom.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.stochastic">
-<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.stochastic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.stochastic">
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.stochastic" title="Permalink to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>idx_sample</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
-<li><p><strong>prop_sample</strong> (<em>int</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+<li><p><strong>prop_sample</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
 </ul>
@@ -330,8 +339,8 @@ specified during initialization.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.train" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.train" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the kernel in training mode, which disables the gradients computation and disables stochasticity of the
 kernel. For the gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stachistic
 part, when put in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
@@ -339,8 +348,8 @@ the previously specified indices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.polynomial.update_sample">
-<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.polynomial.update_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.update_sample">
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.update_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
 <dl class="field-list simple">
@@ -362,8 +371,8 @@ the gradients of the updated values to zero if relevant.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rkm.kernel.rbf.html" class="btn btn-neutral float-left" title="RBF Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rkm.kernel.cosine.html" class="btn btn-neutral float-right" title="Cosine Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sigmoid.html" class="btn btn-neutral float-left" title="Sigmoid Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="explicit_nn.html" class="btn btn-neutral float-right" title="Explicit Network-based Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

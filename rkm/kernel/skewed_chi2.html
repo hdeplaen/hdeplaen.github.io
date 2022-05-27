@@ -4,9 +4,10 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sigmoid Kernel &mdash; RKM 0.1 documentation</title>
+  <title>Skewed Chi Squared Kernel &mdash; RKM 0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/plot_directive.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -19,8 +20,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Nystrom Kernel" href="rkm.kernel.nystrom.html" />
-    <link rel="prev" title="Cosine Kernel" href="rkm.kernel.cosine.html" /> 
+    <link rel="next" title="Exponential Kernel" href="exponential.html" />
+    <link rel="prev" title="Additive Chi Squared Kernel" href="additive_chi2.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,8 +40,20 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rkm.kernel.html">Kernel Module</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#kernel-factory">Kernel Factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#generic-kernels">Generic Kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="additive_chi2.html">Additive Chi Squared Kernel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Skewed Chi Squared Kernel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -57,10 +70,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="rkm.kernel.html">Kernel Module</a> &raquo;</li>
-      <li>Sigmoid Kernel</li>
+          <li><a href="index.html">Kernel Module</a> &raquo;</li>
+      <li>Skewed Chi Squared Kernel</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/kernel/rkm.kernel.sigmoid.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/kernel/skewed_chi2.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -68,23 +81,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="sigmoid-kernel">
-<h1>Sigmoid Kernel<a class="headerlink" href="#sigmoid-kernel" title="Permalink to this headline"></a></h1>
+  <section id="skewed-chi-squared-kernel">
+<h1>Skewed Chi Squared Kernel<a class="headerlink" href="#skewed-chi-squared-kernel" title="Permalink to this headline"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rkm.kernel.</span></span><span class="sig-name descname"><span class="pre">sigmoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="rkm.kernel.implicit.html#rkm.kernel.implicit" title="rkm.kernel.implicit.implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.implicit.implicit</span></code></a></p>
-<p>Sigmoid kernel.</p>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rkm.kernel.</span></span><span class="sig-name descname"><span class="pre">skewed_chi2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="implicit.html#rkm.kernel.implicit" title="rkm.kernel.implicit.implicit"><code class="xref py py-class docutils literal notranslate"><span class="pre">rkm.kernel.implicit.implicit</span></code></a></p>
+<p>Skewed Chi Squared kernel. Often used in computer vision.</p>
 <div class="math notranslate nohighlight">
-\[k(x,y) = \sigma\left( a (x^\top y) + b \right),\]</div>
-<p>where <span class="math notranslate nohighlight">\(\sigma(\cdot)\)</span> is the sigmoid function.</p>
+\[k(x,y) = \prod_i \frac{2\sqrt(x_i+c) \sqrt(y_i+c)}{x_i + y_i + 2c}.\]</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>a</strong> (<em>double</em><em>, </em><em>optional</em>) – Value for <span class="math notranslate nohighlight">\(a\)</span>., defaults to 1</p></li>
-<li><p><strong>b</strong> (<em>double</em><em>, </em><em>optional</em>) – Value for <span class="math notranslate nohighlight">\(b\)</span>., defaults to 0</p></li>
-<li><p><strong>params</strong> – <cite>True</cite> if the gradient of <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are to be computed. If so, a graph is computed
-and the parameters can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
+<li><p><strong>c</strong> – Free parameter <span class="math notranslate nohighlight">\(c\)</span>., defaults to 0.</p></li>
+<li><p><strong>c_trainable</strong> – <cite>True</cite> if the gradient of <span class="math notranslate nohighlight">\(c\)</span> is to be computed. If so, a graph is computed
+and <span class="math notranslate nohighlight">\(c\)</span> can be updated. <cite>False</cite> just leads to a static computation., defaults to <cite>False</cite></p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
@@ -107,9 +118,9 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dd>
 </dl>
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.K" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.sigmoid.k" title="rkm.kernel.sigmoid.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.K">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.K" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.skewed_chi2.k" title="rkm.kernel.skewed_chi2.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
 <div class="math notranslate nohighlight">
@@ -117,20 +128,25 @@ called.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.center">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.sigmoid.center" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.c">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.c" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.center">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.skewed_chi2.center" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.dim_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.dim_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.forward" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">representation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dual'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.forward" title="Permalink to this definition"></a></dt>
 <dd><p>Passes datapoints through the kernel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -150,21 +166,21 @@ called.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.hparams">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.hparams" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.hparams">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hparams</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.hparams" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the hyperparameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.idx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">idx</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.idx" title="Permalink to this definition"></a></dt>
 <dd><p>Indices of the selected datapoints of the sample set when performing various operations. This is only relevant
 in the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.init_sample">
-<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.init_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.init_sample">
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.init_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -186,8 +202,8 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.k" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.k">
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -223,52 +239,46 @@ construction is used., defaults to None</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.normalize">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.sigmoid.normalize" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.normalize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.skewed_chi2.normalize" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.num_idx" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.num_idx">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.num_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.num_sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.params">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.params" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.params">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.params" title="Permalink to this definition"></a></dt>
 <dd><p>Dictionnary containing the parameters and their values. This can be relevant for monitoring.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.params_trainable">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params_trainable</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.params_trainable" title="Permalink to this definition"></a></dt>
-<dd><p>Boolean returning if the parameters a trainable or not.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.sigmoid.sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.sample">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.skewed_chi2.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.stochastic">
-<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.stochastic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.stochastic">
+<span class="sig-name descname"><span class="pre">stochastic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.stochastic" title="Permalink to this definition"></a></dt>
 <dd><p>Resets which subset of the samples are to be used until the next call of this function. This is relevant in the
 case of stochastic training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>idx_sample</strong> (<em>int</em><em>[</em><em>]</em><em>, </em><em>optional</em>) – Indices of the sample subset relative to the original sample set., defaults to <cite>None</cite></p></li>
-<li><p><strong>prop_sample</strong> (<em>int</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
+<li><p><strong>prop_sample</strong> (<em>double</em><em>, </em><em>optional</em>) – Instead of giving indices, passing a proportion of the original sample set is also
 possible. The indices will be uniformly randomly chosen without replacement. The value must be chosen
 such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>prop_sample</cite> <span class="math notranslate nohighlight">\(\leq 1\)</span>., defaults to <cite>None</cite>.</p></li>
 </ul>
@@ -284,8 +294,8 @@ specified during initialization.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.train" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.train" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the kernel in training mode, which disables the gradients computation and disables stochasticity of the
 kernel. For the gradients and other things, we refer to the <cite>torch.nn.Module</cite> documentation. For the stachistic
 part, when put in evaluation mode (<cite>False</cite>), all the sample points are used for the computations, regardless of
@@ -293,8 +303,8 @@ the previously specified indices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="rkm.kernel.sigmoid.update_sample">
-<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.sigmoid.update_sample" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="rkm.kernel.skewed_chi2.update_sample">
+<span class="sig-name descname"><span class="pre">update_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.skewed_chi2.update_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Updates the sample set. In contradiction to <cite>init_samples</cite>, this only updates the values of the sample and sets
 the gradients of the updated values to zero if relevant.</p>
 <dl class="field-list simple">
@@ -316,8 +326,8 @@ the gradients of the updated values to zero if relevant.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="rkm.kernel.cosine.html" class="btn btn-neutral float-left" title="Cosine Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rkm.kernel.nystrom.html" class="btn btn-neutral float-right" title="Nystrom Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="additive_chi2.html" class="btn btn-neutral float-left" title="Additive Chi Squared Kernel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="exponential.html" class="btn btn-neutral float-right" title="Exponential Kernel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
