@@ -58,7 +58,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#network-based-kernels">Network-based kernels</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#time-kernels">Time Kernels</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="indicator.html">Indicator Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RBF Kernel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#class">Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#abstract-kernels">Abstract Kernels</a></li>
 </ul>
@@ -133,7 +142,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.rbf.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.rbf.K" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.rbf.k" title="rkm.kernel.rbf.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
@@ -149,7 +158,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.rbf.dim_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.rbf.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
@@ -212,7 +221,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.rbf.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#rkm.kernel.rbf.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -255,14 +264,14 @@ construction is used., defaults to None</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.rbf.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.rbf.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.rbf.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.rbf.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
@@ -274,7 +283,7 @@ the case of stochastic training.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.rbf.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.rbf.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.rbf.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 
@@ -387,6 +396,23 @@ the gradients of the updated values to zero if relevant.</p>
 <figcaption>
 <p><span class="caption-text">(<a class="reference external" href="../kernel/rbf-1_02.png">png</a>, <a class="reference external" href="../kernel/rbf-1_02.hires.png">hires.png</a>, <a class="reference external" href="../kernel/rbf-1_02.pdf">pdf</a>)</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
 </figcaption>
+</figure>
+</section>
+<section id="time">
+<h3>Time<a class="headerlink" href="#time" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rkm</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="n">rkm</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">rbf</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;RBF with sigma &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">sigma</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href="../kernel/rbf-2.py">Source code</a>, <a class="reference external" href="../kernel/rbf-2.png">png</a>, <a class="reference external" href="../kernel/rbf-2.hires.png">hires.png</a>, <a class="reference external" href="../kernel/rbf-2.pdf">pdf</a>)</p>
+<figure class="align-default">
+<img alt="../_images/rbf-2.png" class="plot-directive" src="../_images/rbf-2.png" />
 </figure>
 </section>
 </section>

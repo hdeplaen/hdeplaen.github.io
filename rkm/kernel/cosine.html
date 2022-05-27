@@ -129,7 +129,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.cosine.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.cosine.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.cosine.K" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.cosine.k" title="rkm.kernel.cosine.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
@@ -145,7 +145,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.cosine.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.cosine.dim_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.cosine.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
@@ -251,14 +251,14 @@ construction is used., defaults to None</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.cosine.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.cosine.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.cosine.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.cosine.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.cosine.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.cosine.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
@@ -270,7 +270,7 @@ the case of stochastic training.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.cosine.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.cosine.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.cosine.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 

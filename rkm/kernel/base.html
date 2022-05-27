@@ -114,7 +114,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.C">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><a class="headerlink" href="#rkm.kernel.base.C" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">C</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.base.C" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the covariance matrix on the sample datapoints.</p>
 <div class="math notranslate nohighlight">
 \[C = \frac1N\sum_i^N \phi(x_i)\phi(x_i)^\top.\]</div>
@@ -122,7 +122,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.base.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.base.K" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.base.k" title="rkm.kernel.base.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
@@ -138,7 +138,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.base.dim_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.base.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
@@ -201,7 +201,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.base.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.base.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#rkm.kernel.base.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -244,14 +244,14 @@ construction is used., defaults to None</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.base.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.base.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.base.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.base.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
@@ -263,7 +263,7 @@ the case of stochastic training.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.base.phi">
-<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.base.phi" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#rkm.kernel.base.phi" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the specified points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -284,7 +284,7 @@ construction is used., defaults to None</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.phi_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><a class="headerlink" href="#rkm.kernel.base.phi_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">phi_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.base.phi_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the explicit feature map <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> of the sample datapoints. Same as calling
 <a class="reference internal" href="#rkm.kernel.base.phi" title="rkm.kernel.base.phi"><code class="xref py py-func docutils literal notranslate"><span class="pre">phi()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
@@ -293,7 +293,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.base.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.base.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.base.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 

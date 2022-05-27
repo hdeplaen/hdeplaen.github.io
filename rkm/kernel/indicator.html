@@ -52,6 +52,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="hat.html">Hat Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbf.html">RBF Kernel</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#vision-kernels">Vision Kernels</a></li>
@@ -96,10 +97,10 @@
 <p>Indicator kernel.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}k(x,y) = \left\{
-\begin{array}[lll]
-\gamma &amp; \text{ if } &amp; |x-y|=0, \\
-1 &amp; \text{ if } &amp; 0 &lt; |x-y| \leq p, \\
-0 &amp; \text{ otherwise.} &amp;
+\begin{array}
+g\gamma &amp; \text{ if } |x-y|=0, \\
+1 &amp; \text{ if } 0 &lt; |x-y| \leq p, \\
+0 &amp; \text{ otherwise.}
 \end{array}
 \right.\end{split}\]</div>
 <div class="admonition note">
@@ -150,7 +151,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 </dl>
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.K">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><a class="headerlink" href="#rkm.kernel.indicator.K" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">K</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.indicator.K" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the kernel matrix on the sample dataset. Same result as calling <a class="reference internal" href="#rkm.kernel.indicator.k" title="rkm.kernel.indicator.k"><code class="xref py py-func docutils literal notranslate"><span class="pre">k()</span></code></a>, but faster.
 It is loaded from memory if already computed and unchanged since then, to avoid re-computation when reccurently
 called.</p>
@@ -166,7 +167,7 @@ called.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.dim_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><a class="headerlink" href="#rkm.kernel.indicator.dim_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.indicator.dim_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Dimension of each datapoint.</p>
 </dd></dl>
 
@@ -234,7 +235,7 @@ such that <span class="math notranslate nohighlight">\(0 &lt;\)</span> <cite>pro
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.k">
-<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.indicator.k" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">implicit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#rkm.kernel.indicator.k" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a kernel matrix, either of the sample, either out-of-sample, either fully out-of-sample.</p>
 <div class="math notranslate nohighlight">
 \[K = [k(x_i,y_j)]_{i,j=1}^{N,M},\]</div>
@@ -270,6 +271,18 @@ construction is used., defaults to None</p></li>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.indicator.lag">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lag</span></span><a class="headerlink" href="#rkm.kernel.indicator.lag" title="Permalink to this definition"></a></dt>
+<dd><p>Lag <span class="math notranslate nohighlight">\(p\)</span> of the kernel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.indicator.lag_trainable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lag_trainable</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.indicator.lag_trainable" title="Permalink to this definition"></a></dt>
+<dd><p>Boolean indicating if the lag <span class="math notranslate nohighlight">\(p\)</span> is trainable.</p>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.normalize">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.indicator.normalize" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be normalized. Changing this value leads to a recomputation of the statistics.</p>
@@ -277,14 +290,14 @@ construction is used., defaults to None</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.num_idx">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><a class="headerlink" href="#rkm.kernel.indicator.num_idx" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_idx</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.indicator.num_idx" title="Permalink to this definition"></a></dt>
 <dd><p>Number of selected datapoints of the sample set when performaing various operations. This is only relevant in
 the case of stochastic training.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.num_sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><a class="headerlink" href="#rkm.kernel.indicator.num_sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rkm.kernel.indicator.num_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Number of datapoints in the sample set.</p>
 </dd></dl>
 
@@ -296,7 +309,7 @@ the case of stochastic training.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.indicator.sample">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><a class="headerlink" href="#rkm.kernel.indicator.sample" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sample</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">torch.Tensor</span></em><a class="headerlink" href="#rkm.kernel.indicator.sample" title="Permalink to this definition"></a></dt>
 <dd><p>Sample dataset.</p>
 </dd></dl>
 
@@ -357,12 +370,12 @@ the gradients of the updated values to zero if relevant.</p>
 <section id="linear-time">
 <h3>Linear (Time)<a class="headerlink" href="#linear-time" title="Permalink to this headline"></a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">rkm</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="n">rkm</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">indicator</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">lag</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">rkm</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">indicator</span><span class="p">(</span><span class="n">sample</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">lag</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">K</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Indicator with lag &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">lag</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>(<a class="reference external" href="../kernel/indicator-1.py">Source code</a>, <a class="reference external" href="../kernel/indicator-1.png">png</a>, <a class="reference external" href="../kernel/indicator-1.hires.png">hires.png</a>, <a class="reference external" href="../kernel/indicator-1.pdf">pdf</a>)</p>
