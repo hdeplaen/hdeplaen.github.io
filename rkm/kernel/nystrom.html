@@ -112,6 +112,8 @@ by the Nystrom kernel itself. It is only added for completeness., defaults to <c
 handled by the Nystrom kernel itself. It is only added for completeness., defaults to <cite>False</cite></p></li>
 <li><p><strong>**kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Other arguments for the base kernel (e.g. the bandwidth for an RBF kernel, the degree for a
 polynomial kernel etc.). For the default values, please refer to the requested class in question.</p></li>
+<li><p><strong>base_kernel</strong> (<em>rkm.kernel.*</em><em>, </em><em>optional</em>) – Instead of creating a new kernel on which to use the Nyström method, one can also perform it
+on an existing kernel. In that case, the other base arguments are bypassed., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample</strong> (<em>Tensor</em><em>(</em><em>num_sample</em><em>, </em><em>dim_sample</em><em>)</em><em>, </em><em>optional</em>) – Sample points used to compute the kernel matrix. When an out-of-sample computation is asked, it will
 be given relative to these samples., defaults to <cite>None</cite></p></li>
 <li><p><strong>sample_trainable</strong> (<em>bool</em><em>, </em><em>optional</em>) – <cite>True</cite> if the gradients of the sample points are to be computed. If so, a graph is
@@ -152,9 +154,20 @@ called.</p>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.base_kernel">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base_kernel</span></span><a class="headerlink" href="#rkm.kernel.nystrom.base_kernel" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="rkm.kernel.nystrom.center">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">center</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rkm.kernel.nystrom.center" title="Permalink to this definition"></a></dt>
 <dd><p>Indicates if the kernel has to be centered. Changing this value leads to a recomputation of the statistics.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rkm.kernel.nystrom.dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dim</span></span><a class="headerlink" href="#rkm.kernel.nystrom.dim" title="Permalink to this definition"></a></dt>
+<dd><p>Dimension of the explicit feature map.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -199,7 +212,7 @@ in the case of stochastic training.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rkm.kernel.nystrom.init_sample">
-<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.init_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">init_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rkm.kernel.nystrom.init_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Initializes the sample set (and the stochastic indices).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
