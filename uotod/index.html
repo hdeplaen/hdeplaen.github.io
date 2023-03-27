@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">-->
+
+    <title>Unbalanced Optimal Transport: A Unified Framework for Object Detection</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link ref="stylesheet" href="sinkhorn.css">
+    <script src="math.js"></script>
+</head>
+
+<body>
+
+<main role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron text-center">
+        <div class="container">
+            <h1 class="display-4">Unbalanced Optimal Transport: A Unified Framework for Object Detection</h1>
+            <h3>CVPR 2023</h3>
+            <hr>
+            <h6><a href="https://hdeplaen.github.io/" target="_blank">Henri De Plaen</a><sup>1*</sup>,
+                <a href="https://be.linkedin.com/in/pierre-fran%C3%A7ois-de-plaen-622855158" target="_blank">Pierre-François
+                    De Plaen</a><sup>2*</sup>,
+                <a href="https://www.esat.kuleuven.be/sista/members/suykens.html" target="_blank">Johan A. K.
+                    Suykens</a><sup>1</sup>,
+                <a href="https://be.linkedin.com/in/marc-proesmans-a616065" target="_blank">Marc
+                    Proesmans</a><sup>2</sup>,
+                <a href="https://homes.esat.kuleuven.be/~tuytelaa/" target="_blank">Tinne Tuytelaars</a><sup>2</sup>,
+                <a href="http://xzhou.me" target="_blank">Luc Van Gool</a><sup>2,3</sup></h6>
+            <div class="row">
+                <p class="col-md-4"><sup>1</sup><a href="https://www.esat.kuleuven.be/stadius/" target="_blank">ESAT-STADIUS,
+                    KU Leuven, Belgium</a></p>
+                <p class="col-md-4"><sup>1</sup><a href="https://www.esat.kuleuven.be/psi/" target="_blank">ESAT-PSI, KU
+                    Leuven, Belgium</a></p>
+                <p class="col-md-4"><sup>1</sup><a href="https://vision.ee.ethz.ch/" target="_blank">Computer Vision
+                    Lab, ETH Z&uuml;rich, Switzerland</a></p>
+            </div>
+            <sup>*</sup> These authors contributed equally to this work.
+            <div class="row justify-content-center">
+                <div class="mx-2 mt-4"><a class="btn btn-primary btn-lg" href="docs/uotod.pdf" role="button"
+                                          target="_blank">Paper</a>
+                </div>
+                <div class="mx-2 mt-4"><a class="btn btn-primary btn-lg" href="docs/uotod_supp.pdf" role="button"
+                                          target="_blank">Supplementary</a></div>
+                <div class="mx-2 mt-4"><a class="btn btn-primary btn-lg" href="https://github.com/hdeplaen/uotod"
+                                          role="button"
+                                          target="_blank">Code</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <h2>Abstract</h2>
+        <h6 class="font-italic">TL;DR: We introduce a much more versatile new class of matching strategies unifying many existing ones, as well as being well suited for GPUs.</h6>
+        <p class="text-justify">During training, supervised object detection tries to correctly match the predicted bounding boxes and
+            associated classification scores to the ground truth. This is essential to determine which predictions are
+            to be pushed towards which solutions, or to be discarded. Popular matching strategies include matching to
+            the closest ground truth box (mostly used in combination with anchors), or matching via the Hungarian
+            algorithm (mostly used in anchor-free methods). Each of these strategies comes with its own properties,
+            underlying losses, and heuristics. We show how Unbalanced Optimal Transport unifies these different
+            approaches and opens a whole continuum of methods in between. This allows for a finer selection of the
+            desired properties. Experimentally, we show that training an object detection model with Unbalanced Optimal
+            Transport is able to reach the state-of-the-art both in terms of Average Precision and Average Recall as
+            well as to provide a faster initial convergence. The approach is well suited for GPU implementation, which
+            proves to be an advantage for large-scale models.</p>
+        <hr>
+    </div> <!-- /container -->
+
+    <div class="container">
+        <section id="sinkhorn-demo" class="full-section">
+            <h2>Interactive tool</h2>
+            <div class="row">
+                <div id="set-parameters" class="col-lg-6 col-xs-12">
+                    <h5>Set parameters</h5>
+                    <form>
+                        <div class="row" id="tau1_param">
+                            <label class="col-sm-6" for="tau1">Prediction constraint \(\tau_1\)</label>
+                            <input class="col-sm-4 form-range" type="range" id="tau1" min="-4" max="3" value="2"/>
+                            <span class="col-sm-2 value"></span>
+                        </div>
+                        <div class="row" id="tau2_param">
+                            <label class="col-sm-6" for="tau2">Ground truth constraint \(\tau_2\)</label>
+                            <input class="col-sm-4" type="range" id="tau2" min="-4" max="3" value="2"/>
+                            <span class="col-sm-2 value"></span>
+                        </div>
+                        <div class="row" id="reg_param">
+                            <label class="col-sm-6" for="reg">Entropic regularization \(\varepsilon\)</label>
+                            <input class="col-sm-4" type="range" id="reg" min="0.01" max="0.2" value="0.1" step="0.01"/>
+                            <span class="col-sm-2 value"></span>
+                        </div>
+                        <div class="row" id="thrs_param">
+                            <label class="col-sm-6" for="thrs">Background cost \(c_{\varnothing}\)</label>
+                            <input class="col-sm-4" type="range" id="thrs" min="0.5" max="2.0" value="0.8" step="0.1"/>
+                            <span class="col-sm-2 value"></span>
+                        </div>
+                    </form>
+                </div>
+                <div id="cost-matrix" class="matrices col-lg-3 col-xs-6">
+                    <h5>Cost matrix</h5>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th style="color:red;">A</th>
+                            <th style="color:green;">B</th>
+                            <th>\(\varnothing\)</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="coupling-matrix" class="matrices col-lg-3 col-xs-6">
+                    <h5>Match</h5>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th style="color:red;">A</th>
+                            <th style="color:green;">B</th>
+                            <th>\(\varnothing\)</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                    </table>
+                </div>
+<!--                <div id="image-container" class="col-lg-3">-->
+<!--                    <div class="detection-box">-->
+<!--                        <img src="img/coco.png" alt="Image 24919 from the MS COCO validation dataset."/>-->
+<!--                        <div class="pred-box" id="pred-1" style="width: 29.6875%; height: 37.6471%; left: 20.3125%; top: 37.6471%;">1</div>-->
+<!--                        <div class="pred-box" id="pred-2" style="width: 31.25%; height: 28.2353%; left: 54.6875%; top: 65.8824%;">2</div>-->
+<!--                        <div class="pred-box" id="pred-3" style="width: 25%; height: 30.5882%; left: 16.4063%; top: 30.5882%;">3</div>-->
+<!--                        <div class="pred-box" id="pred-4" style="width: 42.1875%; height: 44.7059%; left: 46.875%; top: 24.7059%;">4</div>-->
+<!--                        <div class="pred-box" id="pred-5" style="width: 15.625%; height: 16.4706%; left: 3.125%; top: 11.7647%;">5</div>-->
+<!--                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red; width: 35.3469%; height: 35.4024%; left: 45.7219%; top: 31.6682%;">A</div>-->
+<!--                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green; width: 35.4359%; height: 34.9788%; left: 17.8672%; top: 35.0518%;">B</div>-->
+<!--                    </div>-->
+<!--                    </div>-->
+<!--                    <div class="caption">COCO validation set - image 24919</div>-->
+<!--                </div>-->
+            </div>
+        </section>
+        <hr>
+    </div>
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <h2>Acknowlegdements</h2>
+        <p class="text-justify">EU: The research leading to these results has received funding from the European
+            Research Council under the European Union’s Horizon 2020 research and innovation program / ERC Advanced
+            Grant E-DUALITY (787960). This paper reflects only the authors’ views and the Union is not liable for any
+            use that may be made of the contained information. Research Council KUL: Optimization frameworks for deep
+            kernel machines C14/18/068. Flemish Government: FWO: projects: GOA4917N (Deep Restricted Kernel Machines:
+            Methods and Foundations), PhD/Postdoc grant; This research received funding from the Flemish Government (AI
+            Research Program). All the authors are also affiliated to Leuven.AI - KU Leuven institute for AI, B-3000,
+            Leuven, Belgium.</p>
+
+        <div class="row justify-content-center">
+            <div class="col-sm-2 my-auto"><a href="https://european-union.europa.eu/index_en" target="_blank"><img
+                    src="img/eu.png" class="img-fluid rounded float-left" alt="European Union"></a></div>
+            <div class="col-sm-2 my-auto"><a href="https://erc.europa.eu/homepage" target="_blank"><img
+                    src="img/erc.png"
+                    class="img-fluid rounded float-left"
+                    alt="European Research Council"></a>
+            </div>
+            <div class="col-sm-2 my-auto"><a href="https://www.kuleuven.be/english/kuleuven/index.html" target="_blank"><img
+                    src="img/kuleuven.png" class="img-fluid rounded float-left" alt="KU Leuven"></a></div>
+            <div class="col-sm-2 my-auto"><a href="https://www.fwo.be/en/" target="_blank"><img src="img/fwo.png"
+                                                                                                class="img-fluid rounded float-left"
+                                                                                                alt="Fonds voor Wetenschappelijk Onderzoek"></a>
+            </div>
+            <div class="col-sm-2 my-auto"><a href="https://www.flandersairesearch.be/en" target="_blank"><img
+                    src="img/vl.png" class="img-fluid rounded float-left" alt="Flanders AI"></a></div>
+        </div>
+    </div>
+
+
+</main>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript">
+    function toFixed(value, precision) {
+        var power = Math.pow(10, precision || 0);
+        return String(Math.round(value * power) / power);
+    }
+
+    function colorInterpolate(colorA, colorB, percentage) {
+        return [
+            Math.round(colorA[0] * (1 - percentage) + colorB[0] * percentage),
+            Math.round(colorA[1] * (1 - percentage) + colorB[1] * percentage),
+            Math.round(colorA[2] * (1 - percentage) + colorB[2] * percentage)
+        ]
+    }
+
+    function positionBoundingBox(bbox, name) {
+        // detection-box
+        var relative_width = bbox[2] / img_width * 100.0;
+        var relative_height = bbox[3] / img_height * 100.0;
+        var relative_x1 = bbox[0] / img_width * 100.0;
+        var relative_y1 = bbox[1] / img_height * 100.0;
+        var box_div = $(".detection-box").find('#' + name);
+
+        box_div.css("width", relative_width.toString() + "%");
+        box_div.css("height", relative_height.toString() + "%");
+        box_div.css("left", relative_x1.toString() + "%");
+        box_div.css("top", relative_y1.toString() + "%");
+    }
+
+    function giouCost(bbox1, bbox2) {
+        var intersect_xyxy = [
+            Math.max(bbox1[0], bbox2[0]),
+            Math.max(bbox1[1], bbox2[1]),
+            Math.min(bbox1[0] + bbox1[2], bbox2[0] + bbox2[2]),
+            Math.min(bbox1[1] + bbox1[3], bbox2[1] + bbox2[3])
+        ];
+        var hull_xyxy = [
+            Math.min(bbox1[0], bbox2[0]),
+            Math.min(bbox1[1], bbox2[1]),
+            Math.max(bbox1[0] + bbox1[2], bbox2[0] + bbox2[2]),
+            Math.max(bbox1[1] + bbox1[3], bbox2[1] + bbox2[3])
+        ];
+
+        var area1 = bbox1[2] * bbox1[3];
+        var area2 = bbox2[2] * bbox2[3];
+
+        var intersection = 0.0;
+        if (intersect_xyxy[2] > intersect_xyxy[0] && intersect_xyxy[3] > intersect_xyxy[1]) {
+            intersection = (intersect_xyxy[2] - intersect_xyxy[0]) * (intersect_xyxy[3] - intersect_xyxy[1]);
+        }
+        var hull_area = (hull_xyxy[2] - hull_xyxy[0]) * (hull_xyxy[3] - hull_xyxy[1]);
+        var union = (area1 + area2 - intersection);
+
+        return 1.0 - (intersection / union) + ((hull_area - union) / hull_area);
+    }
+
+    function setCosts(pred_list, gt_list, bg_thrs) {
+        var bg_rgb = colorInterpolate([255.0, 255.0, 255.0], [214.0, 106.0, 0.0], (bg_thrs - 0.2) / 1.8);
+        var giou_cost_matrix = math.zeros([pred_list.length, gt_list.length + 1]);
+        for (var i = 0; i < pred_list.length; i++) {
+            for (var j = 0; j < gt_list.length; j++) {
+                var giou_cost = giouCost(pred_list[i], gt_list[j]);
+                giou_cost_matrix[i][j] = giou_cost;
+                rgb = colorInterpolate([255.0, 255.0, 255.0], [214.0, 106.0, 0.0], (giou_cost - 0.2) / 1.8);
+                $("#cost-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (j + 2) + ")")
+                    .css("background-color", "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")")
+                    .text(toFixed(giou_cost, 2));
+            }
+            giou_cost_matrix[i][gt_list.length] = bg_thrs;
+            $("#cost-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (gt_list.length + 2) + ")")
+                .css("background-color", "rgb(" + bg_rgb[0] + "," + bg_rgb[1] + "," + bg_rgb[2] + ")")
+                .text(toFixed(bg_thrs, 2));
+        }
+
+        return giou_cost_matrix;
+    }
+
+    function setMatching(cost_matrix, num_pred, num_gt, tau1, tau2, reg) {
+        // compute matching with Sinkhorn algorithm
+        var num_iter = 120;
+        var pow1 = tau1 / (tau1 + reg);
+        var pow2 = tau2 / (tau2 + reg);
+        var K = math.map(math.divide(cost_matrix, -reg), math.exp);
+        var u = math.divide(math.ones(num_pred), num_pred);
+        var v = math.divide(math.ones(num_gt + 1), num_gt + 1);
+        var alpha = math.divide(math.ones(num_pred), num_pred);
+        var beta = math.divide(math.ones(num_gt + 1), num_pred);
+        beta.subset(math.index(num_gt), (num_pred - num_gt) / num_pred);
+        for (iter = 0; iter < num_iter; iter++) {
+            u = math.dotPow(math.dotDivide(alpha, math.multiply(K, v)), pow1);
+            v = math.dotPow(math.dotDivide(beta, math.multiply(math.transpose(K), u)), pow2);
+        }
+
+        var scaling = math.multiply(math.reshape(u, [num_pred, 1]), math.reshape(v, [1, num_gt + 1]));
+        var P = math.multiply(math.dotMultiply(scaling, K), num_pred);
+
+        // fill in the coupling matrix
+        for (var i = 0; i < num_pred; i++) {
+            for (var j = 0; j < num_gt + 1; j++) {
+                rgb = colorInterpolate([255.0, 255.0, 255.0], [0.0, 97.0, 196.0], P.get([i, j]));
+                console.log("rgb(" + rgb[0] + "," + rgb[1] + "" + rgb[2] + ")");
+                $("#coupling-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (j + 2) + ")")
+                    .text(toFixed(P.get([i, j]), 2))
+                    .css("background-color", "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")");
+            }
+        }
+    }
+
+    var img_width = 640;
+    var img_height = 425;
+
+    // define GT and predicted bounging boxes
+    var gt1 = [292.62, 134.59, 226.22, 150.46];
+    var gt2 = [114.35, 148.97, 226.79, 148.66];
+    var gts = [gt1, gt2];
+
+    var pred1 = [130.0, 160.0, 190.0, 160.0];  // best for gt2
+    var pred2 = [350.0, 280.0, 200.0, 120.0];
+    var pred3 = [105.0, 130.0, 160.0, 130.0];  // almost as good as pred1
+    var pred4 = [300.0, 105.0, 270.0, 190.0];  // best for gt1
+    var pred5 = [20.0, 50.0, 100.0, 70.0];  // far away
+    var preds = [pred1, pred2, pred3, pred4, pred5];
+
+    // draw bounding boxes
+    positionBoundingBox(gt1, "gt-1");
+    positionBoundingBox(gt2, "gt-2");
+
+    positionBoundingBox(pred1, "pred-1");
+    positionBoundingBox(pred2, "pred-2");
+    positionBoundingBox(pred3, "pred-3");
+    positionBoundingBox(pred4, "pred-4");
+    positionBoundingBox(pred5, "pred-5");
+
+    // initialize sinkhorn parameters
+    var sinkhorn_tau1 = Math.pow(10, $("#set-parameters #tau1_param input").val());
+    $("#set-parameters #tau1_param span").text(sinkhorn_tau1);
+    var sinkhorn_tau2 = Math.pow(10, $("#set-parameters #tau2_param input").val());
+    $("#set-parameters #tau2_param span").text(sinkhorn_tau2);
+    var sinkhorn_reg = parseFloat($("#set-parameters #reg_param input").val());
+    $("#set-parameters #reg_param span").text(sinkhorn_reg);
+    var sinkhorn_bg_thrs = parseFloat($("#set-parameters #thrs_param input").val());
+    $("#set-parameters #thrs_param span").text(sinkhorn_bg_thrs);
+
+    // compute + draw cost matrix and coupling matrix
+    var giou_cost_matrix = setCosts(preds, gts, sinkhorn_bg_thrs);
+    setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+
+    // dynamically update matrices
+    $(function () {
+        $("#set-parameters #tau1_param input").change(function () {
+            sinkhorn_tau1 = Math.pow(10, $(this).val());
+            $(this).siblings("span").text(sinkhorn_tau1);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function () {
+        $("#set-parameters #tau2_param input").change(function () {
+            sinkhorn_tau2 = Math.pow(10, $(this).val());
+            $(this).siblings("span").text(sinkhorn_tau2);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function () {
+        $("#set-parameters #reg_param input").change(function () {
+            sinkhorn_reg = parseFloat($(this).val());
+            $(this).siblings("span").text(sinkhorn_reg);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function () {
+        $("#set-parameters #thrs_param input").change(function () {
+            sinkhorn_bg_thrs = parseFloat($(this).val());
+            $(this).siblings("span").text(sinkhorn_bg_thrs);
+            giou_cost_matrix = setCosts(preds, gts, sinkhorn_bg_thrs);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+
+</script>
+</body>
+</html>
