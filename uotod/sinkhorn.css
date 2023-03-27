@@ -57,7 +57,7 @@
     border-collapse: collapse;
 }
 
-#sinkhorn-demo .matrices table td{
+#sinkhorn-demo .matrices .matrix-entry table td > .matrix-entry{
     font-size: 14px;
     width: 32px;
     padding: 8px 12px;
@@ -65,15 +65,16 @@
     text-align: center;
 }
 
-#sinkhorn-demo .matrices table td:nth-child(1){
+#sinkhorn-demo .matrices table th > .pred-label {
     font-size: 14px;
     width: 0;
     padding: 8px 8px;
     border: 0;
     font-weight: bold;
+    text-align: center !important;
 }
 
-#sinkhorn-demo .matrices table th{
+#sinkhorn-demo .matrices table th > .gt-label {
     font-size: 14px;
     padding: 4px 12px;
 }

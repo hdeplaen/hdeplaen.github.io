@@ -14,7 +14,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link ref="stylesheet" href="sinkhorn.css">
+    <link rel="stylesheet" href="sinkhorn.css">
     <script src="math.js"></script>
 </head>
 
@@ -25,8 +25,8 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron text-center">
         <div class="container">
-            <h1 class="display-4">Unbalanced Optimal Transport: A Unified Framework for Object Detection</h1>
-            <h3>CVPR 2023</h3>
+            <h1 class="display-5">Unbalanced Optimal Transport: A Unified Framework for Object Detection</h1>
+            <h4>CVPR 2023</h4>
             <hr>
             <h6><a href="https://hdeplaen.github.io/" target="_blank">Henri De Plaen</a><sup>1*</sup>,
                 <a href="https://be.linkedin.com/in/pierre-fran%C3%A7ois-de-plaen-622855158" target="_blank">Pierre-François
@@ -57,13 +57,15 @@
                                           target="_blank">Code</a></div>
             </div>
         </div>
-    </div>
+    </div> <!-- Title -->
 
     <div class="container">
         <!-- Example row of columns -->
         <h2>Abstract</h2>
-        <h6 class="font-italic">TL;DR: We introduce a much more versatile new class of matching strategies unifying many existing ones, as well as being well suited for GPUs.</h6>
-        <p class="text-justify">During training, supervised object detection tries to correctly match the predicted bounding boxes and
+        <h6 class="font-italic">TL;DR: We introduce a much more versatile new class of matching strategies unifying many
+            existing ones, as well as being well suited for GPUs.</h6>
+        <p class="text-justify">During training, supervised object detection tries to correctly match the predicted
+            bounding boxes and
             associated classification scores to the ground truth. This is essential to determine which predictions are
             to be pushed towards which solutions, or to be discarded. Popular matching strategies include matching to
             the closest ground truth box (mostly used in combination with anchors), or matching via the Hungarian
@@ -75,13 +77,13 @@
             well as to provide a faster initial convergence. The approach is well suited for GPU implementation, which
             proves to be an advantage for large-scale models.</p>
         <hr>
-    </div> <!-- /container -->
+    </div> <!-- Abstract -->
 
     <div class="container">
-        <section id="sinkhorn-demo" class="full-section">
-            <h2>Interactive tool</h2>
-            <div class="row">
-                <div id="set-parameters" class="col-lg-6 col-xs-12">
+        <section id="sinkhorn-demo">
+            <h2>Interactive Tool</h2>
+            <div class="row justify-content-center">
+                <div id="set-parameters" class="col-lg-8 col-sm-12">
                     <h5>Set parameters</h5>
                     <form>
                         <div class="row" id="tau1_param">
@@ -90,122 +92,147 @@
                             <span class="col-sm-2 value"></span>
                         </div>
                         <div class="row" id="tau2_param">
-                            <label class="col-sm-6" for="tau2">Ground truth constraint \(\tau_2\)</label>
-                            <input class="col-sm-4" type="range" id="tau2" min="-4" max="3" value="2"/>
-                            <span class="col-sm-2 value"></span>
+                            <label class="col-6" for="tau2">Ground truth constraint \(\tau_2\)</label>
+                            <input class="col-4" type="range" id="tau2" min="-4" max="3" value="2"/>
+                            <span class="col-2 value"></span>
                         </div>
                         <div class="row" id="reg_param">
-                            <label class="col-sm-6" for="reg">Entropic regularization \(\varepsilon\)</label>
-                            <input class="col-sm-4" type="range" id="reg" min="0.01" max="0.2" value="0.1" step="0.01"/>
-                            <span class="col-sm-2 value"></span>
+                            <label class="col-6" for="reg">Entropic regularization \(\varepsilon\)</label>
+                            <input class="col-4" type="range" id="reg" min="0.01" max="0.5" value="0.1" step="0.01"/>
+                            <span class="col-2 value"></span>
                         </div>
                         <div class="row" id="thrs_param">
                             <label class="col-sm-6" for="thrs">Background cost \(c_{\varnothing}\)</label>
-                            <input class="col-sm-4" type="range" id="thrs" min="0.5" max="2.0" value="0.8" step="0.1"/>
+                            <input class="col-sm-4" type="range" id="thrs" min="0.1" max="2.0" value="0.8" step="0.1"/>
                             <span class="col-sm-2 value"></span>
                         </div>
                     </form>
                 </div>
-                <div id="cost-matrix" class="matrices col-lg-3 col-xs-6">
+                <div id="cost-matrix" class="matrices col-lg-2 col-sm-6">
                     <h5>Cost matrix</h5>
                     <table>
                         <tr>
-                            <th></th>
-                            <th style="color:red;">A</th>
-                            <th style="color:green;">B</th>
-                            <th>\(\varnothing\)</th>
-                        </tr>
-                        <tr>
+                            <th class="pred-label">1</th>
                             <td>1</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>1</td>
+                            <td>1</td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th class="pred-label">2</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
                         </tr>
                         <tr>
-                            <td>3</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th class="pred-label">3</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
                         </tr>
                         <tr>
-                            <td>4</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th class="pred-label">4</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
                         </tr>
                         <tr>
-                            <td>5</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <th class="pred-label">5</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th class="gt-label" style="color:red">A</th>
+                            <th class="gt-label" style="color:green">B</th>
+                            <th class="gt-label">\(\varnothing\)</th>
                         </tr>
                     </table>
                 </div>
-                <div id="coupling-matrix" class="matrices col-lg-3 col-xs-6">
-                    <h5>Match</h5>
+                <div id="coupling-matrix" class="matrices col-lg-2 col-sm-6">
+                    <h5>Match \(\hat{\boldsymbol{P}}\)</h5>
                     <table>
                         <tr>
+                            <th class="pred-label">1</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th class="pred-label">2</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th class="pred-label">3</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th class="pred-label">4</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <th class="pred-label">5</th>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
                             <th></th>
-                            <th style="color:red;">A</th>
-                            <th style="color:green;">B</th>
-                            <th>\(\varnothing\)</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
+                            <th class="gt-label" style="color:red">A</th>
+                            <th class="gt-label" style="color:green">B</th>
+                            <th class="gt-label">\(\varnothing\)</th>
                         </tr>
                     </table>
                 </div>
-<!--                <div id="image-container" class="col-lg-3">-->
-<!--                    <div class="detection-box">-->
-<!--                        <img src="img/coco.png" alt="Image 24919 from the MS COCO validation dataset."/>-->
-<!--                        <div class="pred-box" id="pred-1" style="width: 29.6875%; height: 37.6471%; left: 20.3125%; top: 37.6471%;">1</div>-->
-<!--                        <div class="pred-box" id="pred-2" style="width: 31.25%; height: 28.2353%; left: 54.6875%; top: 65.8824%;">2</div>-->
-<!--                        <div class="pred-box" id="pred-3" style="width: 25%; height: 30.5882%; left: 16.4063%; top: 30.5882%;">3</div>-->
-<!--                        <div class="pred-box" id="pred-4" style="width: 42.1875%; height: 44.7059%; left: 46.875%; top: 24.7059%;">4</div>-->
-<!--                        <div class="pred-box" id="pred-5" style="width: 15.625%; height: 16.4706%; left: 3.125%; top: 11.7647%;">5</div>-->
-<!--                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red; width: 35.3469%; height: 35.4024%; left: 45.7219%; top: 31.6682%;">A</div>-->
-<!--                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green; width: 35.4359%; height: 34.9788%; left: 17.8672%; top: 35.0518%;">B</div>-->
-<!--                    </div>-->
-<!--                    </div>-->
-<!--                    <div class="caption">COCO validation set - image 24919</div>-->
-<!--                </div>-->
+                <div id="image-container" class="col-lg-4 col-sm-6">
+                    <div class="detection-box">
+                        <img class="img-fluid rounded" src="img/coco.png"
+                             alt="Image 24919 from the MS COCO validation dataset."/>
+                        <div class="pred-box" id="pred-1">1</div>
+                        <div class="pred-box" id="pred-2">2</div>
+                        <div class="pred-box" id="pred-3">3</div>
+                        <div class="pred-box" id="pred-4">4</div>
+                        <div class="pred-box" id="pred-5">5</div>
+                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
+                        </div>
+                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
+                        </div>
+                    </div>
+                    <div class="caption">COCO validation set - image 24919</div>
+                </div>
+
             </div>
         </section>
         <hr>
-    </div>
+    </div> <!-- Interactive -->
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <h2>Reference</h2>
+
+        <blockquote>Henri De Plaen, Pierre-François De Plaen, Johan A. K. Suykens, Marc Proesmans, Tinne Tuytelaars, and
+            Luc Van Gool. 2023. <span>“Unbalanced Optimal Transport: A Unified Framework for Object Detection.”</span>
+            In <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>
+        </blockquote>
+        You can also <a href="docs/cite.bib" target="_blank">download the BibTex</a> or copy it from the following:
+        <pre><code>
+@InProceedings{DePlaen_2023_CVPR,
+    author    = {De Plaen, Henri and De Plaen, Pierre-François and Suykens, Johan A. K. and Proesmans, Marc and Tuytelaars, Tinne and Van Gool, Luc},
+    title     = {Unbalanced Optimal Transport: A Unified Framework for Object Detection},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    month     = {June},
+    year      = {2023},
+    pages     = {}
+}
+        </code></pre>
+        <hr>
+    </div> <!-- Reference -->
 
     <div class="container">
         <!-- Example row of columns -->
@@ -221,24 +248,22 @@
 
         <div class="row justify-content-center">
             <div class="col-sm-2 my-auto"><a href="https://european-union.europa.eu/index_en" target="_blank"><img
-                    src="img/eu.png" class="img-fluid rounded float-left" alt="European Union"></a></div>
+                    src="img/eu.png" class="img-fluid rounded" alt="European Union"></a></div>
             <div class="col-sm-2 my-auto"><a href="https://erc.europa.eu/homepage" target="_blank"><img
                     src="img/erc.png"
-                    class="img-fluid rounded float-left"
+                    class="img-fluid rounded"
                     alt="European Research Council"></a>
             </div>
             <div class="col-sm-2 my-auto"><a href="https://www.kuleuven.be/english/kuleuven/index.html" target="_blank"><img
-                    src="img/kuleuven.png" class="img-fluid rounded float-left" alt="KU Leuven"></a></div>
+                    src="img/kuleuven.png" class="img-fluid rounded" alt="KU Leuven"></a></div>
             <div class="col-sm-2 my-auto"><a href="https://www.fwo.be/en/" target="_blank"><img src="img/fwo.png"
-                                                                                                class="img-fluid rounded float-left"
+                                                                                                class="img-fluid rounded"
                                                                                                 alt="Fonds voor Wetenschappelijk Onderzoek"></a>
             </div>
             <div class="col-sm-2 my-auto"><a href="https://www.flandersairesearch.be/en" target="_blank"><img
-                    src="img/vl.png" class="img-fluid rounded float-left" alt="Flanders AI"></a></div>
+                    src="img/vl.png" class="img-fluid rounded" alt="Flanders AI"></a></div>
         </div>
-    </div>
-
-
+    </div> <!-- Acknowledgements -->
 </main>
 
 <!-- Bootstrap core JavaScript
@@ -315,12 +340,12 @@
                 var giou_cost = giouCost(pred_list[i], gt_list[j]);
                 giou_cost_matrix[i][j] = giou_cost;
                 rgb = colorInterpolate([255.0, 255.0, 255.0], [214.0, 106.0, 0.0], (giou_cost - 0.2) / 1.8);
-                $("#cost-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (j + 2) + ")")
+                $("#cost-matrix table tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 2) + ")")
                     .css("background-color", "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")")
                     .text(toFixed(giou_cost, 2));
             }
             giou_cost_matrix[i][gt_list.length] = bg_thrs;
-            $("#cost-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (gt_list.length + 2) + ")")
+            $("#cost-matrix table tr:nth-child(" + (i + 1) + ") td:nth-child(" + (gt_list.length + 2) + ")")
                 .css("background-color", "rgb(" + bg_rgb[0] + "," + bg_rgb[1] + "," + bg_rgb[2] + ")")
                 .text(toFixed(bg_thrs, 2));
         }
@@ -352,7 +377,7 @@
             for (var j = 0; j < num_gt + 1; j++) {
                 rgb = colorInterpolate([255.0, 255.0, 255.0], [0.0, 97.0, 196.0], P.get([i, j]));
                 console.log("rgb(" + rgb[0] + "," + rgb[1] + "" + rgb[2] + ")");
-                $("#coupling-matrix table tr:nth-child(" + (i + 2) + ") td:nth-child(" + (j + 2) + ")")
+                $("#coupling-matrix table tr:nth-child(" + (i + 1) + ") td:nth-child(" + (j + 2) + ")")
                     .text(toFixed(P.get([i, j]), 2))
                     .css("background-color", "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")");
             }
