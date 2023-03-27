@@ -1,0 +1,107 @@
+#sinkhorn-demo .blocks-container{
+    display: grid;
+    grid-template-columns: 1fr 400px 240px 240px;
+}
+
+#sinkhorn-demo .blocks-container > div{
+    background-color: #fff;
+    padding: 8px 24px;
+    margin: 4px;
+}
+
+#sinkhorn-demo .blocks-container h3{
+    margin: 12px 0;
+    font-size: 18px;
+    font-weight: 200;
+    text-align: center;
+}
+
+#sinkhorn-demo #image-container{
+    grid-column-start: 2;
+    padding: 0;
+}
+
+#sinkhorn-demo #image-container img{
+    width: 100%;
+    vertical-align: middle;
+}
+
+#sinkhorn-demo #image-container .caption{
+    display: block;
+    text-align: center;
+    padding: 4px 4px;
+    vertical-align: bottom;
+}
+
+#sinkhorn-demo #image-container .detection-box{
+    position: relative;
+}
+
+#sinkhorn-demo #image-container .detection-box > .gt-box,
+#sinkhorn-demo #image-container .detection-box > .pred-box{
+    position: absolute;
+    top: 0; left: 0;
+}
+
+#sinkhorn-demo #image-container .detection-box > .pred-box{
+    border: 2px solid rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+#sinkhorn-demo .matrices{
+
+}
+
+#sinkhorn-demo .matrices table{
+    margin: auto;
+    border-collapse: collapse;
+}
+
+#sinkhorn-demo .matrices table td{
+    font-size: 14px;
+    width: 32px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#sinkhorn-demo .matrices table td:nth-child(1){
+    font-size: 14px;
+    width: 0;
+    padding: 8px 8px;
+    border: 0;
+    font-weight: bold;
+}
+
+#sinkhorn-demo .matrices table th{
+    font-size: 14px;
+    padding: 4px 12px;
+}
+
+#sinkhorn-demo #set-parameters div{
+    margin: 12px 0;
+    padding: 0;
+}
+
+#sinkhorn-demo #set-parameters label{
+    display: inline-block;
+    width: 100px;
+    max-width: 30%;
+    vertical-align: middle;
+    margin: 0;
+}
+
+#sinkhorn-demo #set-parameters input{
+    display: inline-block;
+    width: 50%;
+    vertical-align: middle;
+    margin: 0;
+}
+
+#sinkhorn-demo #set-parameters span{
+    display: inline-block;
+    width: 10%;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0;
+}
