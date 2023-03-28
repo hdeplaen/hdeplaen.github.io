@@ -80,35 +80,26 @@
     </div> <!-- Abstract -->
 
     <div class="container">
-        <section id="sinkhorn-demo">
+        <section id="sinkhorn-demo" class="full_section">
             <h2>Interactive Tool</h2>
-            <div class="row justify-content-center">
-                <div id="set-parameters" class="col-lg-8 col-sm-12">
-                    <h5>Set parameters</h5>
-                    <form>
-                        <div class="row" id="tau1_param">
-                            <label class="col-sm-6" for="tau1">Prediction constraint \(\tau_1\)</label>
-                            <input class="col-sm-4 form-range" type="range" id="tau1" min="-4" max="3" value="2"/>
-                            <span class="col-sm-2 value"></span>
+            <div class="blocks-container">
+                <div id="image-container">
+                    <div class="detection-box">
+                        <img class="img-fluid rounded" src="img/coco.png"
+                             alt="Image 24919 from the MS COCO validation dataset."/>
+                        <div class="pred-box" id="pred-1">1</div>
+                        <div class="pred-box" id="pred-2">2</div>
+                        <div class="pred-box" id="pred-3">3</div>
+                        <div class="pred-box" id="pred-4">4</div>
+                        <div class="pred-box" id="pred-5">5</div>
+                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
                         </div>
-                        <div class="row" id="tau2_param">
-                            <label class="col-6" for="tau2">Ground truth constraint \(\tau_2\)</label>
-                            <input class="col-4" type="range" id="tau2" min="-4" max="3" value="2"/>
-                            <span class="col-2 value"></span>
+                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
                         </div>
-                        <div class="row" id="reg_param">
-                            <label class="col-6" for="reg">Entropic regularization \(\varepsilon\)</label>
-                            <input class="col-4" type="range" id="reg" min="0.01" max="0.5" value="0.1" step="0.01"/>
-                            <span class="col-2 value"></span>
-                        </div>
-                        <div class="row" id="thrs_param">
-                            <label class="col-sm-6" for="thrs">Background cost \(c_{\varnothing}\)</label>
-                            <input class="col-sm-4" type="range" id="thrs" min="0.1" max="2.0" value="0.8" step="0.1"/>
-                            <span class="col-sm-2 value"></span>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="caption">COCO validation set - image 24919</div>
                 </div>
-                <div id="cost-matrix" class="matrices col-lg-2 col-sm-6">
+                <div id="cost-matrix" class="matrices">
                     <h5>Cost matrix</h5>
                     <table>
                         <tr>
@@ -149,7 +140,32 @@
                         </tr>
                     </table>
                 </div>
-                <div id="coupling-matrix" class="matrices col-lg-2 col-sm-6">
+                <div id="set-parameters">
+                    <h5>Set parameters</h5>
+                    <form>
+                        <div id="tau1_param">
+                            <label for="tau1">Prediction constraint \(\tau_1\)</label>
+                            <input type="range" id="tau1" min="-4" max="3" value="2"/>
+                            <span></span>
+                        </div>
+                        <div id="tau2_param">
+                            <label for="tau2">Ground truth constraint \(\tau_2\)</label>
+                            <input type="range" id="tau2" min="-4" max="3" value="2"/>
+                            <span></span>
+                        </div>
+                        <div id="reg_param">
+                            <label for="reg">Entropic regularization \(\varepsilon\)</label>
+                            <input type="range" id="reg" min="0.01" max="0.5" value="0.1" step="0.01"/>
+                            <span></span>
+                        </div>
+                        <div id="thrs_param">
+                            <label for="thrs">Background cost \(c_{\varnothing}\)</label>
+                            <input type="range" id="thrs" min="0.1" max="2.0" value="0.8" step="0.1"/>
+                            <span></span>
+                        </div>
+                    </form>
+                </div>
+                <div id="coupling-matrix" class="matrices">
                     <h5>Match \(\hat{\boldsymbol{P}}\)</h5>
                     <table>
                         <tr>
@@ -190,23 +206,6 @@
                         </tr>
                     </table>
                 </div>
-                <div id="image-container" class="col-lg-4 col-sm-6">
-                    <div class="detection-box">
-                        <img class="img-fluid rounded" src="img/coco.png"
-                             alt="Image 24919 from the MS COCO validation dataset."/>
-                        <div class="pred-box" id="pred-1">1</div>
-                        <div class="pred-box" id="pred-2">2</div>
-                        <div class="pred-box" id="pred-3">3</div>
-                        <div class="pred-box" id="pred-4">4</div>
-                        <div class="pred-box" id="pred-5">5</div>
-                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
-                        </div>
-                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
-                        </div>
-                    </div>
-                    <div class="caption">COCO validation set - image 24919</div>
-                </div>
-
             </div>
         </section>
         <hr>

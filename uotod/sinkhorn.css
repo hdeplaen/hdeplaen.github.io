@@ -1,6 +1,15 @@
+main .full-section{
+    margin: 0;
+    padding: 24px 60px;
+    padding-bottom: 40px;
+    background-color: #2F4858;
+    justify-items: center;
+    align-items: center;
+}
+
 #sinkhorn-demo .blocks-container{
     display: grid;
-    grid-template-columns: 1fr 400px 240px 240px;
+    grid-template-columns: 1fr 320px;
 }
 
 #sinkhorn-demo .blocks-container > div{
@@ -17,8 +26,14 @@
 }
 
 #sinkhorn-demo #image-container{
-    grid-column-start: 2;
+    /*grid-column-start: 2;*/
     padding: 0;
+}
+
+#sinkhorn-demo #image-container .detection-box{
+    width: 400px;
+    max-width: 100%;
+    margin: auto;
 }
 
 #sinkhorn-demo #image-container img{
@@ -44,12 +59,14 @@
 }
 
 #sinkhorn-demo #image-container .detection-box > .pred-box{
-    border: 2px solid rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(33, 33, 33, 1);
     z-index: 1;
 }
 
-#sinkhorn-demo .matrices{
-
+#sinkhorn-demo .matrices h5{
+    text-align: center;
+    vertical-align: text-bottom;
+    line-height: 32px;
 }
 
 #sinkhorn-demo .matrices table{
@@ -57,24 +74,23 @@
     border-collapse: collapse;
 }
 
-#sinkhorn-demo .matrices .matrix-entry table td > .matrix-entry{
+#sinkhorn-demo .matrices table td{
     font-size: 14px;
-    width: 32px;
+    width: 36px;
     padding: 8px 12px;
     border: 1px solid #ddd;
     text-align: center;
 }
 
-#sinkhorn-demo .matrices table th > .pred-label {
+#sinkhorn-demo .matrices table td:nth-child(1){
     font-size: 14px;
     width: 0;
     padding: 8px 8px;
     border: 0;
     font-weight: bold;
-    text-align: center !important;
 }
 
-#sinkhorn-demo .matrices table th > .gt-label {
+#sinkhorn-demo .matrices table th{
     font-size: 14px;
     padding: 4px 12px;
 }
@@ -86,23 +102,48 @@
 
 #sinkhorn-demo #set-parameters label{
     display: inline-block;
-    width: 100px;
-    max-width: 30%;
+    width: 300px;
+    max-width: 45%;
     vertical-align: middle;
     margin: 0;
 }
 
 #sinkhorn-demo #set-parameters input{
     display: inline-block;
-    width: 50%;
+    width: 400px;
+    max-width: 40%;
     vertical-align: middle;
     margin: 0;
+    margin-left: min(20px, 3%);
 }
 
 #sinkhorn-demo #set-parameters span{
     display: inline-block;
-    width: 10%;
+    width: 7%;
     vertical-align: middle;
     text-align: center;
     margin: 0;
+}
+
+
+@media screen and (max-width: 992px) {
+    #sinkhorn-demo .blocks-container{
+        grid-template-columns: 1fr 220px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #sinkhorn-demo .blocks-container{
+        grid-template-columns: 1fr 1fr;
+    }
+    #sinkhorn-demo #image-container{
+        grid-row-start: 1;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+    #sinkhorn-demo #set-parameters{
+        grid-row-start: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
 }
