@@ -37,7 +37,7 @@ main .full-section{
 }
 
 #sinkhorn-demo #image-container img{
-    width: 100%;
+    width: auto;
     vertical-align: middle;
 }
 
@@ -136,14 +136,52 @@ main .full-section{
     #sinkhorn-demo .blocks-container{
         grid-template-columns: 1fr 1fr;
     }
+
     #sinkhorn-demo #image-container{
         grid-row-start: 1;
         grid-column-start: 1;
         grid-column-end: 3;
     }
+
     #sinkhorn-demo #set-parameters{
         grid-row-start: 2;
         grid-column-start: 1;
         grid-column-end: 3;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    #sinkhorn-demo .blocks-container > div{
+        padding: 4px 0;
+    }
+
+    #sinkhorn-demo #set-parameters label{
+        display: block;
+        width: auto;
+        max-width: none;
+    }
+
+    #sinkhorn-demo #set-parameters input{
+        box-sizing: border-box;
+        width: calc(100% - 60px);
+        max-width: none;
+    }
+
+    #sinkhorn-demo #set-parameters span{
+        box-sizing: border-box;
+        width: 40px;
+    }
+
+    #sinkhorn-demo .matrices table td{
+        width: 22px;
+        padding: 4px 6px;
+    }
+
+    #sinkhorn-demo .matrices table td:nth-child(1){
+        padding: 4px 6px;
+    }
+
+    #sinkhorn-demo .matrices table th{
+        padding: 4px 6px;
     }
 }
