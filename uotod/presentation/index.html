@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Sinkhorn</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/jumbotron/">
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.6.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="math.js"></script>
+</head>
+<body>
+<div id="dialog" title="Navigate">
+  <p>Please use left and right arrows to navigate. On a smartphone, you can just scroll.</p>
+</div>
+
+<div class="global-container">
+    <!-- Paper name and authors -->
+    <section class="slide" id="slide-1">
+        <img src="img/cvpr_banner_homepage.svg" id="cvpr-banner" />
+        <h1>Unbalanced Optimal Transport:<br/> A Unified Framework for Object Detection</h1>
+        <h2>CVPR 2023 - Poster: TUE-AM-304</h2>
+        <div class="content-block paper-authors">
+            <ul class="names">
+                <li><div class="l">Henri De Plaen</div><div class="r">1*</div></li>
+                <li><div class="l">Pierre-François De Plaen</div><div class="r">2*</div></li>
+                <li><div class="l">Johan A. K. Suykens</div><div class="r">1</div></li>
+                <lI><div class="l">Marc Proesmans</div><div class="r">2</div></lI>
+                <li><div class="l">Tinne Tuytelaars</div><div class="r">2</div></li>
+                <li><div class="l">Luc Van Gool</div><div class="r">2,3</div></li>
+            </ul>
+            <ul class="affiliations">
+                <li><div class="r">1</div>ESAT-STADIUS, KU Leuven, Belgium</li>
+                <li><div class="r">2</div>ESAT-PSI, KU Leuven, Belgium</li>
+                <li><div class="r">3</div>Computer Vision Lab, ETH Zürich, Switzerland</li>
+            </ul>
+        </div>
+        <div id="university-logos">
+            <img src="img/2560px-KU_Leuven_logo.svg.png"/>
+            <img src="img/ethz.png"/>
+            <img src="img/erc-logo.jpg"/>
+        </div>
+    </section>
+
+    <!-- Object Detection -->
+    <!--<section class="slide" id="slide-2">
+        <h2>Object Detection</h2>
+        <div class="content-block image-container example-2" id="image-1">
+            <div class="detection-box">
+                <img src="img/img.jpg" alt=""/>
+                <div class="gt-box" id="gt-1" style="background-color:rgba(255, 0, 0, 0.2);color:red;opacity:0;">A</div>
+                <div class="gt-box" id="gt-2" style="background-color:rgba(0, 255, 0, 0.2);color:green;opacity:0;">B</div>
+            </div>
+        </div>
+        <div class="content-block" id="bbox-def">
+            <span style="display:inline-block;width:10vw">Coordinates:</span>
+            \(\boldsymbol{x} = (x_c,y_c,w,h) \in [ 0,1 ]^4\) <br/>
+            <span style="display:inline-block;width:10vw">Category:</span>
+            \(\boldsymbol{c} = \{0,1\}^{N_c} \)
+        </div>
+    </section>-->
+
+    <!-- Training -->
+    <section class="slide" id="slide-3">
+        <h2>Training</h2>
+        <div class="content-block">
+            <div class="sub-content-block">
+                <h3><span class="item-counter">1</span> Output \(N_p\) predictions</h3>
+            </div>
+            <div class="sub-content-block center-children" id="output-n-preds">
+                <div class="image-container example-2" id="empty-example">
+                    <div class="detection-box">
+                        <img src="img/img.jpg" style="opacity:0.9;" alt=""/>
+                    </div>
+                </div>
+                <div class="text-container">
+                    <div class="right-arrow"></div>
+                    <div class="model-schema">
+                        Model
+                    </div>
+                    <div class="right-arrow"></div>
+                    <div class="model-predictions" id="xc-predictions">
+                        <ul>
+                            <li>\(\hat{b}^{(1)}\), \(\hat{c}^{(1)}\)</li>
+                            <li>\(\hat{b}^{(2)}\), \(\hat{c}^{(2)}\)</li>
+                            <li style="border:none;">\(\vdots\)</li>
+                            <li>\(\hat{b}^{(5)}\), \(\hat{c}^{(5)}\)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="image-container example-2" id="preds-example">
+                    <div class="detection-box">
+                        <img src="img/img.jpg" alt=""/>
+                        <div class="pred-box" id="pred-1">1</div>
+                        <div class="pred-box" id="pred-2">2</div>
+                        <div class="pred-box" id="pred-3">3</div>
+                        <div class="pred-box" id="pred-4">4</div>
+                        <div class="pred-box" id="pred-5">5</div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-content-block">
+                <h3><span class="item-counter">2</span> Assign predictions to GT boxes</h3>
+            </div>
+            <div class="sub-content-block center-children" id="assign-preds-to-gt">
+                <div class="image-container example-2" id="full-example">
+                    <div class="detection-box">
+                        <img src="img/img.jpg" alt=""/>
+                        <div class="pred-box" id="pred-1">1</div>
+                        <div class="pred-box" id="pred-2">2</div>
+                        <div class="pred-box" id="pred-3">3</div>
+                        <div class="pred-box" id="pred-4">4</div>
+                        <div class="pred-box" id="pred-5">5</div>
+                        <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
+                        </div>
+                        <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
+                        </div>
+                    </div>
+                </div>
+                <div class="text-container">
+                    <div class="sub-text-container cost-1" id="giou-cost-1-less">
+                        <ul class="preds">
+                            <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                        </ul>
+                        <div class="matching">
+                            <table>
+                                <tr>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td></td><td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <ul class="gts">
+                            <li style="color:red;">A</li><li style="color:green;">B</li>
+                        </ul>
+                        <div class="caption">GIoU<br/>cost matrix</div>
+                    </div>
+                </div>
+                <div class="text-container">
+                    <img src="img/problem-with-arrows.svg" class="prob-with-arrows">
+                </div>
+            </div>
+            <div class="sub-content-block">
+                <h3><span class="item-counter">3</span> Loss: improve assigned, discard others</h3>
+            </div>
+        </div>
+    </section>
+
+    <!--Motivation -->
+    <section class="slide" id="slide-motivation">
+        <h2>Matching Strategies</h2>
+        <div class="content-block center-children">
+            <div class="image-container example-2">
+                <div class="detection-box">
+                    <img src="img/img.jpg" alt=""/>
+                    <div class="pred-box" id="pred-1">1</div>
+                    <div class="pred-box" id="pred-2">2</div>
+                    <div class="pred-box" id="pred-3">3</div>
+                    <div class="pred-box" id="pred-4">4</div>
+                    <div class="pred-box" id="pred-5">5</div>
+                    <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
+                    </div>
+                    <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
+                    </div>
+                </div>
+                <div class="sub-text-container cost-1 r5c3-matrix" id="giou-cost-motivation">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                    <div class="caption">GIoU cost matrix</div>
+                </div>
+            </div>
+            <div class="text-container container-with-padding" id="strategy-1">
+                <h4 class="center-title">Pred. to best GT</h4>
+                <div class="sub-text-container matching-1 r5c3-matrix" id="to-hide">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td>1</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>1</td><td>0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container matching-1 r5c2-matrix">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td>1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>1</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container matching-1 r5c3-matrix" id="ot-matching-unb1">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-container container-with-padding" id="strategy-2">
+                <h4 class="center-title">GT to best pred.</h4>
+                <div class="sub-text-container matching-1 r5c3-matrix">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container matching-1 r5c3-matrix" id="ot-matching-unb2">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-container container-with-padding" id="strategy-3">
+                <h4 class="center-title">Hungarian Matching</h4>
+                <div class="sub-text-container matching-1 r5c3-matrix" id="ot-matching-unb4">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>1</td><td>0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <!--<div class="sub-text-container matching-1" id="hungarian-matching-1">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <img src="img/problem-1-with-arrows-Hungarian.svg">
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>-->
+                <div class="sub-text-container matching-1 r5c3-matrix" id="ot-matching-unb3">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Assignment -->
+    <section class="slide" id="slide-4">
+        <h2>A Unifying Framework</h2>
+        <div class="content-block center-children">
+            <!-- image and cost -->
+            <div class="image-container example-1" id="full-example">
+                <div class="detection-box">
+                    <img src="img/000000024919.jpg" alt=""/>
+                    <div class="pred-box" id="pred-1">1</div>
+                    <div class="pred-box" id="pred-2">2</div>
+                    <div class="pred-box" id="pred-3">3</div>
+                    <div class="pred-box" id="pred-4">4</div>
+                    <div class="pred-box" id="pred-5">5</div>
+                    <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A
+                    </div>
+                    <div class="gt-box" id="gt-2" style="background-color: rgba(0, 255, 0, 0.2); color: green;">B
+                    </div>
+                </div>
+                <div class="sub-text-container cost-1" id="giou-cost-2">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li>
+                    </ul>
+                    <div class="caption">GIoU cost matrix</div>
+                </div>
+            </div>
+            <!-- DETR -->
+            <div class="text-container container-with-margin" id="detr-container">
+                <div class="sub-text-container">
+                    <h4>DEtection TRansformer <span class="small-note">(DETR)</span></h4>
+                </div>
+                <div class="sub-text-container matching-1" id="hungarian-matching-1">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <img src="img/problem-with-arrows-Hungarian.svg">
+                        <table>
+                            <tr>
+                                <td>0</td><td>1</td><td>0</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>1</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container equation" id="hungarian-equation-0">
+                    $$ \begin{aligned}
+                    \min_{\sigma \in \text{Perm}(N_p)} & \frac{1}{n} \sum_{i=1}^{N_p} C_{i,\sigma(i)}
+                    \end{aligned} $$
+                </div>
+                <div class="sub-text-container equation" id="hungarian-equation-1">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \{0,1\}^{N_p \times N_g} } & < \mathbf{P},\mathbf{C} > \\
+                    s.t. & \sum_{j} P_{ij} = 1 \quad \forall i \\
+                    & \sum_{i} P_{ij} = 1 \quad \forall j
+                    \end{aligned} $$
+                </div>
+            </div>
+            <!-- OT -->
+            <div class="text-container container-with-margin" id="balanced-ot-container">
+                <div class="sub-text-container">
+                    <h4>
+                        <span id="unbalanced-title" style="display:none;">Unbalanced OT <span class="small-note">Lenaic Chizat, et al. (2018)</span></span>
+                        <span id="balanced-title">Optimal Transport <span class="small-note">Leonid Kantorovich (Nobel Prize 1975)</span></span>
+                    </h4>
+                </div>
+                <div class="sub-text-container matching-1 r5c3-matrix" id="ot-matching-reg">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container matching-1" id="ot-matching-1">
+                    <ul class="preds">
+                        <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td>0</td><td>1</td><td>0</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>0.33</td><td>0.33</td><td>0.33</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>0.33</td><td>0.33</td><td>0.33</td>
+                            </tr>
+                            <tr>
+                                <td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td>0</td><td>0</td><td>0.33</td><td>0.33</td><td>0.33</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li style="color:green;">B</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-6">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \mathbb{R}_{+}^{N_p \times N_g} } < \mathbf{P},\mathbf{C} >
+                    & - \epsilon \mathbf{H}(\mathbf{P}) \\
+                    & + \textcolor{red}{10^{-3}} \mathrm{KL}\left(\boldsymbol{P} \mathbf{1}_{N_g} \| \boldsymbol{\alpha}\right) \\
+                    & + \textcolor{red}{10^{3}} \mathrm{KL}\left(\mathbf{1}_{N_p}^{\top} \boldsymbol{P} \| \boldsymbol{\beta}\right) \\
+                    \end{aligned} $$
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-5">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \mathbb{R}_{+}^{N_p \times N_g} } < \mathbf{P},\mathbf{C} >
+                    & - \epsilon \mathbf{H}(\mathbf{P}) \\
+                    & + \textcolor{red}{10^{3}} \mathrm{KL}\left(\boldsymbol{P} \mathbf{1}_{N_g} \| \boldsymbol{\alpha}\right) \\
+                    & + \textcolor{red}{10^{-3}} \mathrm{KL}\left(\mathbf{1}_{N_p}^{\top} \boldsymbol{P} \| \boldsymbol{\beta}\right) \\
+                    \end{aligned} $$
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-4">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \mathbb{R}_{+}^{N_p \times N_g} } < \mathbf{P},\mathbf{C} >
+                    & - \epsilon \mathbf{H}(\mathbf{P}) \\
+                    & + \tau_1 \mathrm{KL}\left(\boldsymbol{P} \mathbf{1}_{N_g} \| \boldsymbol{\alpha}\right) \\
+                    & + \tau_2 \mathrm{KL}\left(\mathbf{1}_{N_p}^{\top} \boldsymbol{P} \| \boldsymbol{\beta}\right) \\
+                    \end{aligned} $$
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-3">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \mathbb{R}_{+}^{N_p \times N_g} } & < \mathbf{P},\mathbf{C} > \textcolor{red}{- \epsilon \mathbf{H}(\mathbf{P})} \\
+                    s.t. & \sum_{j} P_{ij} = \alpha_i \quad \forall i \\
+                    & \sum_{i} P_{ij} = \beta_j \quad \forall j
+                    \end{aligned} $$
+                    <span class="smaller-size">
+                        \( \textcolor{red}{\mathbf{H}(\mathbf{P}) \stackrel{} = -\sum_{i, j} \mathbf{P}_{i, j}\left(\log \left(\mathbf{P}_{i, j}\right)-1\right)} \)
+                    </span>
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-2">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \mathbb{R}_{+}^{N_p \times N_g}} & < \mathbf{P},\mathbf{C} > \\
+                    s.t. & \sum_{j} P_{ij} = \textcolor{red}{\alpha_i} \quad \forall i \\
+                    & \sum_{i} P_{ij} = \textcolor{red}{\beta_j} \quad \forall j
+                    \end{aligned} $$
+                </div>
+                <div class="sub-text-container equation" id="ot-equation-1">
+                    $$ \begin{aligned}
+                    \min_{\mathbf{P} \in \textcolor{red}{\mathbb{R}_{+}^{N_p \times N_g}} } & < \mathbf{P},\mathbf{C} > \\
+                    s.t. & \sum_{j} P_{ij} = 1 \quad \forall i \\
+                    & \sum_{i} P_{ij} = 1 \quad \forall j
+                    \end{aligned} $$
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Entropic Regularization -->
+    <section class="slide" id="slide-5">
+        <h2>Entropic Regularization: Motivation</h2>
+        <div class="content-block center-children">
+            <!-- image and cost -->
+            <div class="image-container example-3" id="simple-image-container">
+                <div class="detection-box">
+                    <img src="img/easy-image.svg"/>
+                    <div class="pred-box" id="pred-1">1</div>
+                    <div class="pred-box" id="pred-2">2</div>
+                    <div class="gt-box" id="gt-1" style="background-color: rgba(255, 0, 0, 0.2); color: red;">A</div>
+                </div>
+                <div class="sub-text-container cost-1 r2c2-matrix" id="giou-cost-simple">
+                    <ul class="preds">
+                        <li>1</li><li>2</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li>\(\varnothing\)</li>
+                    </ul>
+                    <div class="caption">GIoU cost matrix</div>
+                </div>
+            </div>
+            <!-- DETR -->
+            <div class="text-container container-with-margin">  <!--TODO: add id= -->
+                <div class="sub-text-container">
+                    <h4>Hungarian Matching</h4>
+                </div>
+                <div class="sub-text-container matching-1 r2c2-matrix" id="simple-matching-detr">
+                    <ul class="preds">
+                        <li>1</li><li>2</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- OT -->
+            <div class="text-container container-with-margin">  <!--TODO: add id= -->
+                <div class="sub-text-container">
+                    <h4>Optimal Transport</h4>
+                </div>
+                <div class="sub-text-container matching-1 r2c2-matrix" id="simple-matching-ot">
+                    <ul class="preds">
+                        <li>1</li><li>2</li>
+                    </ul>
+                    <div class="matching">
+                        <table>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td></td><td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <ul class="gts">
+                        <li style="color:red;">A</li><li>\(\varnothing\)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results -->
+    <section class="slide" id="slide-6">
+        <h2>Results</h2>
+        <div class="content-block center-children">
+            <div class="sub-text-container">
+                <img src="img/AP_DETR_color-H_balanced.svg" />
+                <div class="image-caption">
+                    Convergence curves for DETR on the Color Boxes dataset
+                </div>
+            </div>
+            <div class="sub-text-container container-with-padding">
+                <img src="img/results.png" />
+            </div>
+        </div>
+    </section>
+
+    <!-- END -->
+    <section class="slide" id="slide-7">
+        <h1>Thank you !</h1>
+        <div class="content-block">
+            <div class="sub-text-container">
+                <img src="img/github-link.svg" width="200px" style="display: block; margin: auto;" />
+            </div>
+            <div class="sub-text-container">
+                <div>hdeplaen.github.io/uotod/</div>
+            </div>
+        </div>
+    </section>
+
+    <a id="next_step_button"
+       style="display:none; position:fixed; bottom: 20px; right: 20px; background-color: grey; color: white;">
+        >
+    </a>
+    <a id="prev_step_button"
+       style="display:none; position:fixed; bottom: 20px; left: 20px; background-color: grey; color: white;">
+        <
+    </a>
+</div>
+</body>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script type="text/javascript">
+    function toFixed(value, precision) {
+        var power = Math.pow(10, precision || 0);
+        return String(Math.round(value * power) / power);
+    }
+
+    function colorInterpolate(colorA, colorB, percentage) {
+        return [
+            Math.round(colorA[0] * (1 - percentage) + colorB[0] * percentage),
+            Math.round(colorA[1] * (1 - percentage) + colorB[1] * percentage),
+            Math.round(colorA[2] * (1 - percentage) + colorB[2] * percentage)
+        ]
+    }
+
+    function positionBoundingBox(bbox, width, height, name, id) {
+        // detection-box
+        var relative_width = bbox[2] / width * 100.0;
+        var relative_height = bbox[3] / height * 100.0;
+        var relative_x1 = bbox[0] / width * 100.0;
+        var relative_y1 = bbox[1] / height * 100.0;
+        var box_div = $(id+" .detection-box").find('#'+name);
+
+        box_div.css({
+            "width": relative_width.toString()+"%",
+            "height": relative_height.toString()+"%",
+            "left": relative_x1.toString()+"%",
+            "top": relative_y1.toString()+"%"
+        });
+    }
+
+    function giouCost(bbox1, bbox2) {
+        var intersect_xyxy = [
+            Math.max(bbox1[0], bbox2[0]),
+            Math.max(bbox1[1], bbox2[1]),
+            Math.min(bbox1[0]+bbox1[2], bbox2[0]+bbox2[2]),
+            Math.min(bbox1[1]+bbox1[3], bbox2[1]+bbox2[3])
+        ];
+        var hull_xyxy = [
+            Math.min(bbox1[0], bbox2[0]),
+            Math.min(bbox1[1], bbox2[1]),
+            Math.max(bbox1[0]+bbox1[2], bbox2[0]+bbox2[2]),
+            Math.max(bbox1[1]+bbox1[3], bbox2[1]+bbox2[3])
+        ];
+
+        var area1 = bbox1[2] * bbox1[3];
+        var area2 = bbox2[2] * bbox2[3];
+
+        var intersection = 0.0;
+        if (intersect_xyxy[2] > intersect_xyxy[0] && intersect_xyxy[3] > intersect_xyxy[1]) {
+            intersection = (intersect_xyxy[2] - intersect_xyxy[0]) * (intersect_xyxy[3] - intersect_xyxy[1]);
+        }
+        var hull_area = (hull_xyxy[2] - hull_xyxy[0]) * (hull_xyxy[3] - hull_xyxy[1]);
+        var union = (area1 + area2 - intersection);
+
+        return 1.0 - (intersection / union) + ((hull_area - union) / hull_area);
+    }
+
+    function setCosts(pred_list, gt_list, bg_thrs, unique_id) {
+        var bg_rgb = colorInterpolate([255.0,255.0,255.0], [224.0,116.0,0.0], (bg_thrs)/2.0);
+        var giou_cost_matrix = math.zeros([pred_list.length, gt_list.length+1]);
+        for (var i = 0; i < pred_list.length; i++) {
+            for (var j = 0; j < gt_list.length; j++) {
+                var giou_cost = giouCost(pred_list[i], gt_list[j]);
+                giou_cost_matrix[i][j] = giou_cost;
+                rgb = colorInterpolate([255.0,255.0,255.0], [224.0,116.0,0.0], (giou_cost)/2.0);
+                $(unique_id+" table tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")")
+                    .css("background-color", "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")")
+                    .text(toFixed(giou_cost, 2));
+            }
+            if (bg_thrs !== false) {
+                giou_cost_matrix[i][gt_list.length] = bg_thrs;
+                $(unique_id+" table tr").children("td").each(function() {
+                    if ($(this).index() >= gt_list.length) {
+                        $(this).css("background-color", "rgb(" + bg_rgb[0] + "," + bg_rgb[1] + "," + bg_rgb[2] + ")")
+                            .text(toFixed(bg_thrs, 2));
+                    }
+                });
+            }
+        }
+
+        return giou_cost_matrix;
+    }
+
+    function setMatching(cost_matrix, num_pred, num_gt, tau1, tau2, reg, id) {
+        // compute matching with Sinkhorn algorithm
+        var num_iter = 120;
+        var pow1 = tau1 / (tau1 + reg);
+        var pow2 = tau2 / (tau2 + reg);
+        var K = math.map(math.divide(cost_matrix, -reg), math.exp);
+        var u = math.divide(math.ones(num_pred), num_pred);
+        var v = math.divide(math.ones(num_gt+1), num_gt+1);
+        var alpha = math.divide(math.ones(num_pred), num_pred);
+        var beta = math.divide(math.ones(num_gt+1), num_pred);
+        beta.subset(math.index(num_gt), (num_pred-num_gt)/num_pred);
+        for(iter = 0; iter < num_iter; iter++){
+            u = math.dotPow(math.dotDivide(alpha, math.multiply(K, v)), pow1);
+            v = math.dotPow(math.dotDivide(beta, math.multiply(math.transpose(K), u)), pow2);
+        }
+
+        var scaling = math.multiply(math.reshape(u, [num_pred, 1]), math.reshape(v, [1, num_gt+1]));
+        var P = math.multiply(math.dotMultiply(scaling, K), num_pred);
+
+        // fill in the coupling matrix
+        for (var i = 0; i < num_pred; i++) {
+            for (var j = 0; j < num_gt+1; j++) {
+                rgb = colorInterpolate([255.0,255.0,255.0], [0.0,97.0,196.0], P.get([i, j]));
+                console.log("rgb("+rgb[0]+","+rgb[1]+""+rgb[2]+")");
+                $(id+" table tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")")
+                    .text(toFixed(P.get([i, j]), 2))
+                    .css("background-color", "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")");
+            }
+        }
+    }
+
+    function setDETR21(cost_matrix, num_pred, num_gt, id) {
+        // compute matching with "Hungarian" algorithm
+        if (cost_matrix[0][0] < cost_matrix[1][0]){
+            P = [[1.0,0.0],[0.0,1.0]];
+        } else {
+            P = [[0.0,1.0],[1.0,0.0]];
+        }
+
+        // fill in the coupling matrix
+        for (var i = 0; i < num_pred; i++) {
+            for (var j = 0; j < num_gt+1; j++) {
+                rgb = colorInterpolate([255.0,255.0,255.0], [0.0,97.0,196.0], P[i][j]);
+                console.log("rgb("+rgb[0]+","+rgb[1]+""+rgb[2]+")");
+                $(id+" table tr:nth-child("+(i+1)+") td:nth-child("+(j+1)+")")
+                    .text(toFixed(P[i][j], 2))
+                    .css("background-color", "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")");
+            }
+        }
+    }
+
+    function fillMatching(table) {
+        $(table).children("td").each(function() {
+            value = $(this).text();
+            rgb = colorInterpolate([255.0,255.0,255.0], [0.0,97.0,196.0], parseFloat(value));
+            $(this).css("background-color", "rgb("+rgb[0]+","+rgb[1]+","+rgb[2]+")");
+        });
+    }
+
+
+    // define GT and predicted bounding boxes
+    var img_width = 640;
+    var img_height = 425;
+
+    var gt1 = [292.62, 134.59, 226.22, 150.46];
+    var gt2 = [114.35, 148.97, 226.79, 148.66];
+    var gts = [gt1, gt2];
+
+    var pred1 = [130.0, 160.0, 190.0, 160.0];  // best for gt2
+    var pred2 = [350.0, 280.0, 200.0, 120.0];
+    var pred3 = [105.0, 130.0, 160.0, 130.0];  // almost as good as pred1
+    var pred4 = [300.0, 105.0, 270.0, 190.0];  // best for gt1
+    var pred5 = [20.0, 50.0, 100.0, 70.0];  // far away
+    var preds = [pred1, pred2, pred3, pred4, pred5];
+
+    // Motivation example
+    var motiv_img_width = 500;
+    var motiv_img_height = 432;
+
+    // define GT and predicted bounding boxes
+    var motiv_gt1 = [52.0, 22.0, 256.0, 306.0];
+    var motiv_gt2 = [26.0, 106.0, 430.0, 288.0];
+    var motiv_gts = [motiv_gt1, motiv_gt2];
+
+    var motiv_pred1 = [25.0,  12.0,  217.0, 203.0];
+    var motiv_pred2 = [362.0, 126.0, 107.0, 299.0];
+    var motiv_pred3 = [87.0,  241.0, 134.0, 102.0];
+    var motiv_pred4 = [41.0,  52.0,  312.0, 231.0];
+    var motiv_pred5 = [287.0, 76.0,  152.0, 312.0];
+    var motiv_preds = [motiv_pred1, motiv_pred2, motiv_pred3, motiv_pred4, motiv_pred5];
+
+    // Simple example (target)
+    var simple_img_width = 400;
+    var simple_img_height = 300;
+
+    // define GT and predicted bounding boxes
+    var simple_gt1 = [140.0, 90.0, 120.0, 120.0];
+    var simple_gts = [simple_gt1];
+
+    var simple_pred1_init = [90.0, 110.0, 120.0, 120.0];
+    var simple_pred1 = [90.0, 110.0, 120.0, 120.0];
+    var simple_pred2 = [230.0, 70.0, 120.0, 120.0];
+    var simple_preds = [simple_pred1, simple_pred2];
+
+    // draw bounding boxes for example-1
+    positionBoundingBox(gt1, img_width, img_height, "gt-1", ".example-1");
+    positionBoundingBox(gt2, img_width, img_height, "gt-2", ".example-1");
+    positionBoundingBox(pred1, img_width, img_height, "pred-1", ".example-1");
+    positionBoundingBox(pred2, img_width, img_height, "pred-2", ".example-1");
+    positionBoundingBox(pred3, img_width, img_height, "pred-3", ".example-1");
+    positionBoundingBox(pred4, img_width, img_height, "pred-4", ".example-1");
+    positionBoundingBox(pred5, img_width, img_height, "pred-5", ".example-1");
+
+    // draw bounding boxes for example-2
+    positionBoundingBox(motiv_gt1, motiv_img_width, motiv_img_height, "gt-1", ".example-2");
+    positionBoundingBox(motiv_gt2, motiv_img_width, motiv_img_height, "gt-2", ".example-2");
+    positionBoundingBox(motiv_pred1, motiv_img_width, motiv_img_height, "pred-1", ".example-2");
+    positionBoundingBox(motiv_pred2, motiv_img_width, motiv_img_height, "pred-2", ".example-2");
+    positionBoundingBox(motiv_pred3, motiv_img_width, motiv_img_height, "pred-3", ".example-2");
+    positionBoundingBox(motiv_pred4, motiv_img_width, motiv_img_height, "pred-4", ".example-2");
+    positionBoundingBox(motiv_pred5, motiv_img_width, motiv_img_height, "pred-5", ".example-2");
+
+    // draw bounding boxes for example-3 (target)
+    positionBoundingBox(simple_gt1, simple_img_width, simple_img_height, "gt-1", ".example-3");
+    positionBoundingBox(simple_pred1, simple_img_width, simple_img_height, "pred-1", ".example-3");
+    positionBoundingBox(simple_pred2, simple_img_width, simple_img_height, "pred-2", ".example-3");
+
+    // initialize sinkhorn parameters
+    /*var sinkhorn_tau1 = Math.pow(10,  $("#set-parameters #tau1_param input").val());
+    $("#set-parameters #tau1_param span").text(sinkhorn_tau1);
+    var sinkhorn_tau2 = Math.pow(10,  $("#set-parameters #tau2_param input").val());
+    $("#set-parameters #tau2_param span").text(sinkhorn_tau2);
+    var sinkhorn_reg = parseFloat($("#set-parameters #reg_param input").val());
+    $("#set-parameters #reg_param span").text(sinkhorn_reg);
+    var sinkhorn_bg_thrs = parseFloat($("#set-parameters #thrs_param input").val());
+    $("#set-parameters #thrs_param span").text(sinkhorn_bg_thrs);*/
+
+    // compute + draw cost matrix and coupling matrix
+    setCosts(motiv_preds, motiv_gts, false, "#giou-cost-1-less .matching");
+    giou_costs_example_elephants = setCosts(preds, gts, 0.8, "#giou-cost-2 .matching");
+    setMatching(giou_costs_example_elephants, preds.length, gts.length, 1000.0, 1000.0, 0.1, "#slide-4 #ot-matching-reg");
+
+    giou_costs_example_motorcycle = setCosts(motiv_preds, motiv_gts, 0.8, "#slide-motivation #giou-cost-motivation");
+    fillMatching("#slide-motivation .text-container table tr");
+
+    giou_costs_example_simple = setCosts(simple_preds, simple_gts, 0.0, "#giou-cost-simple .matching");
+    setMatching(giou_costs_example_simple, simple_preds.length, simple_gts.length, 1000.0, 1000.0, 0.08, "#slide-5 #simple-matching-ot");
+    setDETR21(giou_costs_example_simple, simple_preds.length, simple_gts.length, "#slide-5 #simple-matching-detr");
+
+    fillMatching("#slide-4 #hungarian-matching-1 table tr");
+    fillMatching("#slide-4 #ot-matching-1 table tr");
+
+    setMatching(giou_costs_example_motorcycle, motiv_preds.length, motiv_gts.length, 1000., 0.0001, 0.08, "#slide-motivation #ot-matching-unb1");
+    setMatching(giou_costs_example_motorcycle, motiv_preds.length, motiv_gts.length, 0.0001, 1000.0, 0.08, "#slide-motivation #ot-matching-unb2");
+    setMatching(giou_costs_example_motorcycle, motiv_preds.length, motiv_gts.length, 1000.0, 1000.0, 0.08, "#slide-motivation #ot-matching-unb3");
+
+    /*setMatching(giou_costs_example_motorcycle, preds.length, gts.length, 10000.0, 0.0001, 0.0015, "#slide-motivation #strategy-1");
+    setMatching(giou_costs_example_motorcycle, preds.length, gts.length, 0.0001, 10000.0, 0.0015, "#slide-motivation #strategy-2");
+    setMatching(giou_costs_example_motorcycle, preds.length, gts.length, 10000.0, 10000.0, 0.0015, "#slide-motivation #strategy-3");
+    */
+
+    // var giou_cost_matrix = setCosts(preds, gts, sinkhorn_bg_thrs);
+    /*
+    setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+    */
+
+    // dynamically update matrices
+    /*$(function(){
+        $("#set-parameters #tau1_param input").change(function(){
+            sinkhorn_tau1 = Math.pow(10,  $(this).val());
+            $(this).siblings("span").text(sinkhorn_tau1);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function(){
+        $("#set-parameters #tau2_param input").change(function(){
+            sinkhorn_tau2 = Math.pow(10,  $(this).val());
+            $(this).siblings("span").text(sinkhorn_tau2);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function(){
+        $("#set-parameters #reg_param input").change(function(){
+            sinkhorn_reg = parseFloat($(this).val());
+            $(this).siblings("span").text(sinkhorn_reg);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });
+    $(function(){
+        $("#set-parameters #thrs_param input").change(function(){
+            sinkhorn_bg_thrs = parseFloat($(this).val());
+            $(this).siblings("span").text(sinkhorn_bg_thrs);
+            giou_cost_matrix = setCosts(preds, gts, sinkhorn_bg_thrs);
+            setMatching(giou_cost_matrix, preds.length, gts.length, sinkhorn_tau1, sinkhorn_tau2, sinkhorn_reg);
+        });
+    });*/
+
+    function step1a(){
+        $("html, body").animate({
+            scrollTop: $(window).height(),
+        }, 1000);
+    }
+    function step1a_back(){
+        $("html, body").animate({
+            scrollTop: 0,
+        }, 1000);
+    }
+
+    function step1b(){
+        $("#slide-2 .gt-box").animate({ opacity: "1" }, 1000);
+    }
+    function step1b_back(){
+        $("#slide-2 .gt-box").animate({ opacity: "0" }, 1000);
+    }
+
+    function step1c(){
+        $("#slide-2 #bbox-def").animate({ opacity: "1" }, 1000);
+        $("#slide-2 #image-1").animate({left: "70%"}, 1000);
+    }
+    function step1c_back(){
+        $("#slide-2 #bbox-def").animate({ opacity: "0" }, 1000);
+        $("#slide-2 #image-1").animate({left: "50%"}, 1000);
+    }
+
+    function step2a(){
+        $("html, body").animate({ scrollTop: $(window).height()*1 }, 1000);
+    }
+    function step2a_back(){
+        $("html, body").animate({ scrollTop: 0 }, 1000);
+    }
+
+    function step3a(){
+        $("#slide-3 #output-n-preds").animate({
+            "max-height": "0px"
+        }, 1000, function() {});
+        $("#slide-3 #assign-preds-to-gt").animate({
+            "max-height": "50vh"
+        }, 1000, function() {});
+    }
+    function step3a_back(){
+        $("#slide-3 #output-n-preds").animate({
+            "max-height": "50vh"
+        }, 1000, function() {});
+        $("#slide-3 #assign-preds-to-gt").animate({
+            "max-height": "0px"
+        }, 1000, function() {});
+    }
+
+    function stepMotiva() {
+        $("html, body").animate({ scrollLeft: $(window).width()*1 }, 1000);
+    }
+    function stepMotiva_back() {
+        $("html, body").animate({ scrollLeft: 0 }, 1000);
+    }
+
+    function stepMotivb1() {
+        $("#slide-motivation #giou-cost-motivation tr td:nth-last-child(1)").animate({
+            "opacity": "1",
+            "border-width": "1px"
+        }, 1000);
+        $("#slide-motivation #giou-cost-motivation .gts li:nth-last-child(1)").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-motivation  #strategy-1 .r5c3-matrix").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-motivation  #strategy-1 .r5c2-matrix").animate({
+            "opacity": "0",
+        }, 1000);
+    }
+    function stepMotivb1_back() {
+        $("#slide-motivation #giou-cost-motivation tr td:nth-last-child(1)").animate({
+            "opacity": "0",
+            "border-width": "0px"
+        }, 1000);
+        $("#slide-motivation #giou-cost-motivation .gts li:nth-last-child(1)").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-motivation  #strategy-1 .r5c3-matrix").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-motivation  #strategy-1 .r5c2-matrix").animate({
+            "opacity": "1",
+        }, 1000);
+    }
+
+    function stepMotivc() {
+        $("#slide-motivation #strategy-2").animate({
+            "max-width": "400px",
+            "padding-left": "2vw"
+        }, 1000, function() {});
+    }
+    function stepMotivc_back() {
+        $("#slide-motivation #strategy-2").animate({
+            "max-width": "0px",
+            "padding-left": "Ovw"
+        }, 1000, function() {});
+    }
+
+    function stepMotivd() {
+        $("#slide-motivation #strategy-3").animate({
+            "max-width": "500px",
+            "padding-left": "2vw"
+        }, 1000, function() {});
+    }
+    function stepMotivd_back() {
+        $("#slide-motivation #strategy-3").animate({
+            "max-width": "0px",
+            "padding-left": "0vw"
+        }, 1000, function() {});
+    }
+
+    function stepMotivFull() {
+        /*$("#slide-motivation #hungarian-matching-1").css({
+            "display": "none",
+        });*/
+        $("#slide-motivation #ot-matching-unb1").animate({
+            "max-height": "240px"
+        }, 1000);
+        $("#slide-motivation #ot-matching-unb2").animate({
+            "max-height": "240px"
+        }, 1000);
+        $("#slide-motivation #ot-matching-unb3").animate({
+            "max-height": "240px"
+        }, 1000);
+        /*$("#slide-motivation #ot-matching-unb4").css({
+            "display": "block",
+        });*/
+    }
+    function stepMotivFull_back() {
+        /*$("#slide-motivation #hungarian-matching-1").css({
+            "display": "block",
+        });*/
+        $("#slide-motivation #ot-matching-unb1").animate({
+            "max-height": "0px"
+        }, 1000);
+        $("#slide-motivation #ot-matching-unb2").animate({
+            "max-height": "0px"
+        }, 1000);
+        $("#slide-motivation #ot-matching-unb3").animate({
+            "max-height": "0px"
+        }, 1000);
+        /*$("#slide-motivation #ot-matching-unb4").css({
+            "display": "none",
+        });*/
+    }
+
+    function step4a(){
+        $("html, body").animate({ scrollTop: $(window).height()*2 }, 1000);
+    }
+    function step4a_back(){
+        $("html, body").animate({ scrollTop: $(window).height()*1 }, 1000);
+    }
+
+    function step4b(){
+        $("#slide-4 #hungarian-matching-1 .gts")
+            .animate({
+                top: "0px",
+                left: "30px"
+            }, 2000)
+            .children("li").each(function() {
+                var index = $(this).index();
+                $(this).animate({
+                    left: (index*40).toString()+"px",
+                    top: (-index*30).toString()+"px"
+                }, 2000);
+            });
+        $("#slide-4 #hungarian-matching-1 img").animate({
+            opacity: "0"
+        }, 2000);
+        $("#slide-4 #hungarian-matching-1 table").delay(1000).animate({
+            opacity: "1"
+        }, 2000);
+        $("#slide-4 #hungarian-equation-0").delay(1000).animate({
+            "max-height": "0px"
+        }, 2000);
+        $("#slide-4 #hungarian-equation-1").delay(1000).animate({
+            "max-height": "45vh"
+        }, 2000);
+    }
+    function step4b_back(){
+        $("#slide-4 #hungarian-matching-1 .gts")
+            .animate({
+                top: "30px",
+                left: "135px"
+            }, 2000)
+            .children("li").each(function() {
+                var index = $(this).index();
+                $(this).animate({
+                    left: "0px",
+                    top: "0px",
+                }, 2000);
+            });
+        $("#slide-4 #hungarian-matching-1 img").delay(1000).animate({
+            opacity: "1"
+        }, 2000);
+            $("#slide-4 #hungarian-matching-1 table").animate({
+            opacity: "0"
+        }, 2000);
+        $("#slide-4 #hungarian-equation-0").delay(1000).animate({
+            "max-height": "45vh"
+        }, 2000);
+        $("#slide-4 #hungarian-equation-1").delay(1000).animate({
+            "max-height": "0px"
+        }, 2000);
+    }
+
+    function step4c1(){
+        /* Show OT section */
+        $("#slide-4 #balanced-ot-container").animate({
+            "max-width": "70vw"
+        }, 1000);
+    }
+    function step4c1_back(){
+        /* Show OT section */
+        $("#slide-4 #balanced-ot-container").animate({
+            "max-width": "0px"
+        }, 1000);
+    }
+
+    function step4c2(){
+        /* hide DETR's section */
+        $("#slide-4 #detr-container").animate({
+            "max-width": "0px"
+        }, 1000);
+    }
+    function step4c2_back(){
+        $("#slide-4 #detr-container").animate({
+            "max-width": "30vw"
+        }, 1000);
+    }
+
+    function step4d(){
+        $( "#slide-4 #ot-matching-1 .gts").children("li").each(function() {
+            index = $(this).index();
+            if (index > 2){
+                $(this).animate({
+                    left: (-40*(index-2)).toString()+"px",
+                    "opacity": 0
+                }, 1000);
+            }
+        });
+        $( "#slide-4 #ot-matching-1").delay(200).animate({
+            "width": "-=80px"
+        }, 1000);
+        $( "#slide-4 #ot-matching-1 .matching table tr").children("td").each(function() {
+            index = $(this).index();
+            value = $(this).html();
+            if (index > 2) {
+                $(this).animate({
+                    "opacity": "0",
+                    "border-width": "0"
+                }, 1000);
+            } else if (index === 2 && value == 0.33) {
+                $(this).html(1);
+            }
+            fillMatching("#slide-4 #ot-matching-1 table tr");
+        });
+        $( "#slide-4 #giou-cost-2 .gts").children("li").each(function() {
+            index = $(this).index();
+            if (index > 2){
+                $(this).animate({
+                    left: (-40*(index-2)).toString()+"px",
+                    "opacity": 0
+                }, 1000, function() {});
+            }
+        });
+        $( "#slide-4 #giou-cost-2").delay(200).animate({
+            "width": "170px",
+        }, 1000, function () {});
+        $( "#slide-4 #giou-cost-2 table tr").children("td").each(function() {
+            index = $(this).index();
+            if (index > 2) {
+                $(this).animate({
+                    "opacity": "0",
+                    "border-width": "0"
+                }, 1000, function () {});
+            }
+        });
+        $("#slide-4 #ot-equation-1").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-equation-2").animate({
+            "opacity": "1",
+        }, 1000);
+    }
+    function step4d_back(){
+        $( "#slide-4 #ot-matching-1 .gts").delay(200).children("li").each(function() {
+            index = $(this).index();
+            if (index > 2){
+                $(this).animate({
+                    left: "0px",
+                    "opacity": 1
+                }, 1000);
+            }
+        });
+        $( "#slide-4 #ot-matching-1").animate({
+            "width": "250px"
+        }, 1000);
+        $( "#slide-4 #ot-matching-1 .matching table tr").children("td").each(function() {
+            index = $(this).index();
+            value = $(this).html();
+            if (index > 2) {
+                $(this).animate({
+                    "opacity": "1",
+                    "border-width": "1px"
+                }, 1000, function () {
+                });
+            } else if (index === 2 && value == 1) {
+                $(this).html(0.33);
+            }
+            fillMatching("#slide-4 #ot-matching-1 table tr");
+        });
+        $( "#slide-4 #giou-cost-2 .gts").delay(200).children("li").each(function() {
+            index = $(this).index();
+            if (index > 2){
+                $(this).animate({
+                    left: "0px",
+                    "opacity": 1
+                }, 1000, function() {});
+            }
+        });
+        $( "#slide-4 #giou-cost-2").animate({
+            "width": "+=80px",
+        }, 1000, function () {});
+        $( "#slide-4 #giou-cost-2 table tr").children("td").each(function() {
+            index = $(this).index();
+            if (index > 2) {
+                $(this).animate({
+                    "opacity": "1",
+                    "border-width": "1px"
+                }, 1000, function () {});
+            }
+        });
+        $("#slide-4 #ot-equation-1").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-equation-2").animate({
+            "opacity": "0",
+        }, 1000);
+    }
+
+    /* Entropy Reg equation */
+    function step4e(){
+        $("#slide-4 #ot-equation-2").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-equation-3").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-matching-1").css({
+            "display": "none",
+        }, 1000);
+        $("#slide-4 #ot-matching-reg").css({
+            "display": "block",
+        }, 1000);
+    }
+    function step4e_back(){
+        $("#slide-4 #ot-equation-2").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-equation-3").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-matching-1").css({
+            "display": "block",
+        }, 1000);
+        $("#slide-4 #ot-matching-reg").css({
+            "display": "none",
+        }, 1000);
+    }
+
+    function step5a(){
+        $( "#slide-5").animate({
+            "opacity": "1"
+        }, 1000);
+    }
+    function step5a_back(){
+        $( "#slide-5").animate({
+            "opacity": "0"
+        }, 1000);
+    }
+
+    function step5Animation(){
+        jQuery.fx.interval = 100;
+        $('body').animate({  delta_x: '-=60' }, {
+            duration: 5000,
+            step: function (delta_x, fx) {
+                simple_pred1[0] = simple_pred1_init[0] + delta_x;
+                positionBoundingBox(simple_pred1, simple_img_width, simple_img_height, "pred-1", ".example-3");
+                giou_costs_example_simple = setCosts(simple_preds, simple_gts, 0.0, "#slide-5 #giou-cost-simple .matching");
+                setMatching(giou_costs_example_simple, simple_preds.length, simple_gts.length, 1000.0, 1000.0, 0.08, "#slide-5 #simple-matching-ot");
+                setDETR21(giou_costs_example_simple, simple_preds.length, simple_gts.length, "#slide-5 #simple-matching-detr");
+            },
+            complete: function () {
+                this.delta_x = 0;
+            }
+        });
+    }
+    function step5Animation_back(){
+        simple_pred1[0] = simple_pred1_init[0];
+        positionBoundingBox(simple_pred1, simple_img_width, simple_img_height, "pred-1", ".example-3");
+        giou_costs_example_simple = setCosts(simple_preds, simple_gts, 0.0, "#slide-5 #giou-cost-simple .matching");
+        setMatching(giou_costs_example_simple, simple_preds.length, simple_gts.length, 1000.0, 1000.0, 0.08, "#slide-5 #simple-matching-ot");
+        setDETR21(giou_costs_example_simple, simple_preds.length, simple_gts.length, "#slide-5 #simple-matching-detr");
+    }
+
+    function step6a(){
+        $( "#slide-5").animate({
+            "opacity": "0"
+        }, 1000);
+    }
+    function step6a_back(){
+        $( "#slide-5").animate({
+            "opacity": "1"
+        }, 1000);
+    }
+
+    /* Soft constraints */
+    function step6b(){
+        $("#slide-4 #ot-equation-3").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-equation-4").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #unbalanced-title").css({
+            "display": "inline",
+        });
+        $("#slide-4 #balanced-title").css({
+            "display": "none",
+        });
+    }
+    function step6b_back(){
+        $("#slide-4 #ot-equation-3").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-equation-4").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #unbalanced-title").css({
+            "display": "none",
+        });
+        $("#slide-4 #balanced-title").css({
+            "display": "inline",
+        });
+    }
+
+    function step6c(){
+        $("#slide-4 #ot-equation-4").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-equation-5").animate({
+            "opacity": "1",
+        }, 1000);
+        setMatching(giou_costs_example_elephants, preds.length, gts.length, 1000.0, 0.0001, 0.1, "#slide-4 #ot-matching-reg");
+    }
+    function step6c_back(){
+        $("#slide-4 #ot-equation-4").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-equation-5").animate({
+            "opacity": "0",
+        }, 1000);
+        setMatching(giou_costs_example_elephants, preds.length, gts.length, 1000.0, 1000., 0.1, "#slide-4 #ot-matching-reg");
+    }
+
+    function step6d(){
+        $("#slide-4 #ot-equation-5").animate({
+            "opacity": "0",
+        }, 1000);
+        $("#slide-4 #ot-equation-6").animate({
+            "opacity": "1",
+        }, 1000);
+        setMatching(giou_costs_example_elephants, preds.length, gts.length, 0.0001, 1000.0, 0.1, "#slide-4 #ot-matching-reg");
+    }
+    function step6d_back(){
+        $("#slide-4 #ot-equation-5").animate({
+            "opacity": "1",
+        }, 1000);
+        $("#slide-4 #ot-equation-6").animate({
+            "opacity": "0",
+        }, 1000);
+        setMatching(giou_costs_example_elephants, preds.length, gts.length, 1000.0, 0.0001, 0.1, "#slide-4 #ot-matching-reg");
+    }
+
+    function step7a() {
+        $("html, body").animate({ scrollTop: $(window).height()*1 }, 1000);
+    }
+    function step7a_back() {
+        $("html, body").animate({ scrollTop: $(window).height()*2 }, 1000);
+    }
+
+    function step8a() {
+        $("html, body").animate({ scrollTop: 0 }, 1000);
+    }
+    function step8a_back() {
+        $("html, body").animate({ scrollTop: $(window).height()*1 }, 1000);
+    }
+
+    function step9a() {
+        $("html, body").animate({ scrollLeft: $(window).width()*2 }, 1000);
+    }
+    function step9a_back() {
+        $("html, body").animate({ scrollLeft: $(window).width()*1 }, 1000);
+    }
+
+    var steps = [
+        /*step1a, step1b, step1c,*/
+        step2a,
+        step3a,
+        stepMotiva, stepMotivb1, stepMotivc, stepMotivd, stepMotivFull,
+        step4a, step4b, step4c1, step4c2, step4d, step4e,
+        step5a, step5Animation,
+        step6a, step6b, step6c, step6d,
+        step7a,
+        step8a,
+        step9a
+    ];
+    var steps_back = [
+        /*step1a_back, step1b_back, step1c_back,*/
+        step2a_back,
+        step3a_back,
+        stepMotiva_back, stepMotivb1_back, stepMotivc_back, stepMotivd_back, stepMotivFull_back,
+        step4a_back, step4b_back, step4c1_back, step4c2_back, step4d_back, step4e_back,
+        step5a_back, step5Animation_back,
+        step6a_back, step6b_back, step6c_back, step6d_back,
+        step7a_back,
+        step8a_back,
+        step9a_back
+    ];
+    var step_counter = 0;
+
+    $(function(){
+        $("#next_step_button").click(function(){
+            steps[step_counter]();
+            step_counter += 1;
+        });
+        $("#prev_step_button").click(function(){
+            if (step_counter > 0) {
+                steps_back[step_counter-1]();
+                step_counter -= 1;
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $(window).on('keydown', function(e) {
+            key = e.keyCode;
+            if (key === 33 || key === 39){ /* page up => next */
+                e.preventDefault();
+                steps[step_counter]();
+                step_counter += 1;
+            } else if (key === 34 || key === 37){ /* page down => previous */
+                e.preventDefault();
+                if (step_counter > 0) {
+                    steps_back[step_counter-1]();
+                    step_counter -= 1;
+                }
+            }
+        });
+    });
+
+</script>
+
+<script>
+$( function() {
+  $( "#dialog" ).dialog();
+} );
+</script>
+</html>

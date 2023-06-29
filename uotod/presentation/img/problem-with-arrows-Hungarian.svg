@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<svg width="100px" height="150px" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <style>
+        line{
+        stroke-width: 0.7;
+        }
+    </style>
+    <!-- centers at: 15, 45, 75, 105, 135 -->
+    <line x1="2" y1="15" x2="98" y2="45" stroke="black" />
+    <line x1="2" y1="105" x2="98" y2="15" stroke="black" />
+
+    <line x1="2" y1="45" x2="98" y2="75" stroke="black" />
+    <line x1="2" y1="75" x2="98" y2="105" stroke="black" />
+    <line x1="2" y1="135" x2="98" y2="135" stroke="black" />
+</svg>
